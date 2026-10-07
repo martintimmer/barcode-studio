@@ -1,5 +1,5 @@
 # 🎛️ Barcode Studio
-
+https://martintimmer.github.io/barcode-studio/
 > Generate, save, and read **CODE 39 / ITF / CODE 128 / DATA MATRIX / QR** codes — right in your browser.
 
 A single-file, zero-install web app. Open `index.html`, type a payload, and get a live, print-ready code. No server, no build step, no image uploads.
