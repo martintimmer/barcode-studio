@@ -84,7 +84,6 @@ header{margin-bottom:24px}
 .toolbar{
   display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:16px
 }
-.label{font:11px "Courier New",monospace;letter-spacing:2px;color:var(--blue2);font-weight:bold}
 h2{margin:5px 0 0;font-size:23px;letter-spacing:-.5px}
 .switch{
   display:flex;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);
@@ -194,6 +193,9 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
 }
 .camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .camera-status{font:10px "Courier New",monospace;color:var(--muted);margin-top:8px}
+body.scanning .toolbar,
+body.scanning .workbench{display:none}
+body.scanning .camera-panel{margin-top:0}
 
 .modal-backdrop{
   position:fixed;inset:0;background:rgba(9,45,77,.28);z-index:30;
@@ -315,11 +317,13 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 
 @media(max-width:700px){
   body{padding:0}.shell{min-height:100svh;border:0;padding-top:calc(15px + env(safe-area-inset-top))}
+  html,body{background:var(--paper)!important}
   .brand{font-size:26px;letter-spacing:-1px}
-  .topbar{flex-direction:column;align-items:stretch;gap:10px}
+  .topbar{flex-direction:column;align-items:stretch;gap:12px}
   .top-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;margin-left:0}
   .top-actions .scan-button,.top-actions .theme-switch{width:100%;min-width:0;justify-content:center;text-align:center;padding-left:6px;padding-right:6px}
-  .kicker{letter-spacing:1.4px}
+  .kicker{letter-spacing:1.4px;margin-top:18px}
+  .rule{margin-top:18px}
   .toolbar{align-items:stretch;flex-direction:column}
   .switch{width:100%}.switch button{flex:1}
   .preview-card{min-height:320px}
@@ -344,7 +348,6 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 <main>
   <section class="toolbar">
     <div>
-      <div class="label">[ 01 — FORMAT ]</div>
       <h2 id="title">Code 39 generator.</h2>
     </div>
     <div class="switch">
@@ -485,13 +488,21 @@ function renderQR(){
   <div class="card-head"><span>QR</span><span>[ LIVE ]</span></div>
   <div class="card-title">[ QR CODE PREVIEW ]</div>
   <div class="preview"><div class="qr-box" id="qrBox" style="width:${codeSize}%"></div></div>
-  <div class="meta"><span>QR / LOCAL</span><span>${qrSize} PX</span></div>
+  <div class="meta"><span>QR / LOCAL</span><span id="qrMetaSize">—</span></div>
  </article>`;
  const box=$("qrBox");
  if(typeof QRCode==="undefined"){return fail("QR library did not load. Check the internet connection once to load QR support.")}
  try{
-   new QRCode(box,{text:text||" ",width:qrSize,height:qrSize,colorDark:barColor,colorLight:bgColor,correctLevel:QRCode.CorrectLevel.M});
+   const visible=Math.round(box.getBoundingClientRect().width)||qrSize;
+   const px=Math.max(64,Math.round(visible*(window.devicePixelRatio||1)));
+   new QRCode(box,{text:text||" ",width:px,height:px,colorDark:barColor,colorLight:bgColor,correctLevel:QRCode.CorrectLevel.M});
+   updateQrMeta(visible);
  }catch(e){fail("Unable to generate this QR payload. Try shorter text.");}
+}
+function updateQrMeta(fallback){
+ const box=$("qrBox"),span=$("qrMetaSize");if(!box||!span)return;
+ const w=Math.round(box.getBoundingClientRect().width)||fallback||0;
+ span.textContent=w+" PX";
 }
 function ensureViewBox(svg){
  if(/\bviewBox=/i.test(svg))return svg;
@@ -553,9 +564,11 @@ function openSettings(){
 const ZX_FORMAT_NAMES={0:"aztec",1:"codabar",2:"code_39",3:"code_93",4:"code_128",5:"data_matrix",6:"ean_8",7:"ean_13",8:"itf",9:"maxicode",10:"pdf_417",11:"qr_code",12:"rss_14",13:"rss_expanded",14:"upc_a",15:"upc_e"};
 const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm"};
 const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR"};
+function openCameraPanel(){$("cameraPanel").classList.add("open");document.body.classList.add("scanning")}
+function closeCameraPanel(){$("cameraPanel").classList.remove("open");document.body.classList.remove("scanning")}
 async function startCamera(){
  if(scannerRunning)return;
- $("cameraPanel").classList.add("open");
+ openCameraPanel();
  if(!window.isSecureContext){$("cameraStatus").textContent="Camera needs a secure page. Open this file over https:// or localhost on iOS/Android.";return}
  if(!navigator.mediaDevices?.getUserMedia){$("cameraStatus").textContent="Camera access is not available in this browser.";return}
  if(typeof ZXingBrowser==="undefined"){ $("cameraStatus").textContent="Scanner library could not load. Check the internet connection once.";return}
@@ -578,9 +591,12 @@ async function startCamera(){
          let m;
          try{m=ZX_TO_MODE[ZX_FORMAT_NAMES[result.getBarcodeFormat()]]}catch(e){}
          if(m)setMode(m);else render();
-         $("cameraStatus").textContent="Scanned "+(m?modeLabels[m]:"code")+" — preview updated. Use COPY or SAVE.";
          stopCamera();
+         closeCameraPanel();
+         $("cameraStatus").textContent="Scanned "+(m?modeLabels[m]:"code")+" — preview updated. Use COPY or SAVE.";
+         setStatus("Scanned "+(m?modeLabels[m]:"code")+" — payload loaded. Use COPY or SAVE.");
          $("data").focus();
+         const wb=document.querySelector(".workbench");if(wb)wb.scrollIntoView({behavior:"smooth",block:"start"});
        } else if(scannerRunning){
          $("cameraStatus").textContent="Scanning… QR / Code 39 / Code 128 / ITF / Data Matrix";
        }
@@ -596,8 +612,8 @@ function stopCamera(){
  const v=$("cameraVideo");if(v.srcObject){v.srcObject.getTracks().forEach(t=>t.stop());v.srcObject=null}
  scannerRunning=false;
 }
-$("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){$("cameraPanel").classList.remove("open");stopCamera()}else{startCamera()}};
-$("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();$("cameraStatus").textContent="Camera stopped."};
+$("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){closeCameraPanel();stopCamera()}else{startCamera()}};
+$("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();closeCameraPanel();$("cameraStatus").textContent="Camera stopped.";};
 
 /* mode */
 const titles={39:"Code 39 generator.",itf:"ITF generator.",128:"Code 128 generator.",dm:"Data Matrix generator.",qr:"QR code generator."};
@@ -680,6 +696,7 @@ $("settingsBtn").onclick=openSettings;
 $("closeSettings").onclick=()=>$("modalBackdrop").classList.remove("open");
 $("modalBackdrop").onclick=e=>{if(e.target===$("modalBackdrop"))$("modalBackdrop").classList.remove("open")};
 window.addEventListener("pagehide",stopCamera);
+let qrResizeTimer;window.addEventListener("resize",()=>{if(mode!=="qr")return;clearTimeout(qrResizeTimer);qrResizeTimer=setTimeout(()=>{if(mode==="qr")renderQR()},180)});
 
 /* Theme: dark is the default. Remember the user's choice. */
 const savedTheme=localStorage.getItem("barcodeStudioTheme");
