@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#070b0f">
 <title>Barcode Studio</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,16 +31,16 @@
   --input:#05080b;--white:#ffffff;--button:#17222a;--buttonHover:#253741;
   --btnText:#f3f7f9;
   --payloadBg:#05080b;--payloadInk:#f3f7f9;--shadow:0 3px 0 rgba(0,0,0,.45);
-  --ui-font-size:15px;--ui-scale:1;
+  --ui-font-size:15px;--ui-scale:1;--danger:#ff8a73;
 }
 body.light{
   --paper:#f7f5f0;--ink:#092d4d;--muted:#6d7d87;--line:#dfe3df;--card:#fffefa;
   --input:#fff;--white:#fff;--button:#092d4d;--buttonHover:#174766;
   --btnText:#f3f7f9;--blue:#1f6aa5;--blue2:#174766;
-  --payloadBg:#ffffff;--payloadInk:#092d4d;--shadow:0 3px 0 rgba(9,45,77,.08)
+  --payloadBg:#ffffff;--payloadInk:#092d4d;--shadow:0 3px 0 rgba(9,45,77,.08);--danger:#c0392b
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;background:var(--coral)}
+html,body{margin:0;min-height:100%;min-width:540px;background:var(--coral)}
 body{
   font-size:var(--ui-font-size);
   font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;color:var(--ink);padding:4px;
@@ -80,6 +82,8 @@ header,main,.footer{max-width:1100px;margin-left:auto;margin-right:auto;position
 header{margin-bottom:24px}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}.scan-button{min-height:42px;padding:7px 12px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:9px "Courier New",monospace;letter-spacing:1.2px;cursor:pointer;box-shadow:var(--shadow)}.scan-button:hover{background:var(--buttonHover);color:#fff}.theme-switch{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 11px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:9px "Courier New",monospace;letter-spacing:1.2px;cursor:pointer;box-shadow:var(--shadow)}.theme-switch span:first-child{font-size:16px;line-height:1}.brand{font-size:36px;font-weight:800;letter-spacing:-1.5px;margin:0 0 10px}
 .kicker{font:10px "Courier New",monospace;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted)}
+.site-url{display:inline-block;margin:2px 0 0;font:10px "Courier New",monospace;letter-spacing:.6px;color:var(--blue2);text-decoration:none;word-break:break-all}
+.site-url:hover{text-decoration:underline}
 .rule{height:1px;background:var(--line);margin-top:14px}
 .toolbar{
   display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:16px
@@ -120,6 +124,7 @@ textarea{
   font-weight:600;
 }
 textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
+textarea::placeholder{color:var(--muted);opacity:.65;font-style:italic}
 textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114,169,216,.18)}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .save-menu{position:relative;display:inline-block}
@@ -142,6 +147,7 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
 }
 .action.secondary{background:var(--card);color:var(--ink)}
 .status{font:10px "Courier New",monospace;color:#7a878c;margin-top:8px;min-height:12px}
+.hint{display:none;color:var(--danger);font:10px/1.55 "Courier New",monospace;letter-spacing:.4px;margin-top:9px}
 .error{color:#b33d31;font-weight:bold}
 
 .preview-card{
@@ -341,7 +347,8 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 
 <header>
   <div class="topbar"><div class="brand">Barcode Studio</div><div class="top-actions"><button class="scan-button" id="cameraButton">SCAN CAMERA</button><button class="scan-button" id="settingsBtn">SETTINGS +</button><button class="theme-switch" id="themeSwitch" aria-label="Toggle dark mode"><span id="themeIcon">☀</span><span id="themeLabel">LIGHT</span></button></div></div>
-  <div class="kicker">Generate, Save, Read CODE 39 / ITF / CODE 128 / DATA MATRIX / QR codes</div>
+  <a class="site-url" href="https://martintimmer.github.io/barcode-studio/" target="_blank" rel="noopener">https://martintimmer.github.io/barcode-studio/</a>
+  <div class="kicker">Generate, Save, Read CODE 39 / ITF / CODE 128 / DATA MATRIX / EAN-13 / UPC-A / QR codes</div>
   <div class="rule"></div>
 </header>
 
@@ -355,6 +362,8 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
       <button data-mode="itf">ITF</button>
       <button data-mode="128">CODE 128</button>
       <button data-mode="dm">DATA MATRIX</button>
+      <button data-mode="ean13">EAN-13</button>
+      <button data-mode="upca">UPC-A</button>
       <button data-mode="qr">QR</button>
     </div>
   </section>
@@ -370,7 +379,7 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
       <button class="action secondary" id="stopCamera">STOP</button>
     </div>
     <div class="camera-status" id="cameraStatus">
-      Point the camera at a Code 39, ITF, Code 128 or QR barcode.
+      Point the camera at a barcode or QR code — QR, Data Matrix, EAN-13/UPC-A, Code 39/93/128, ITF, Codabar and more.
     </div>
   </section>
 
@@ -378,7 +387,8 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
     <section class="editor">
       <div class="panel">
         <label class="field-label" for="data">PAYLOAD / DATA</label>
-        <textarea id="data" spellcheck="false" autocapitalize="characters">1002</textarea>
+        <textarea id="data" spellcheck="false" autocapitalize="characters" placeholder='Type your input here, i.e. "1002" is live now'></textarea>
+        <div id="hint" class="hint"></div>
         <div class="actions">
           <button class="action secondary" id="copyBtn">COPY</button>
           <div class="save-menu" id="saveMenu">
@@ -397,8 +407,8 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
     <div class="output-col">
       <section id="previewArea"></section>
       <section class="size-bar" id="sizeBar">
-        <div class="size-bar-head"><span>[ OUTPUT SIZE ]</span><span class="size-value" id="codeSizeValue">100%</span></div>
-        <input type="range" class="size-range" id="codeSizeRange" min="25" max="100" step="5" value="100" aria-label="Output size">
+        <div class="size-bar-head"><span>[ OUTPUT SIZE ]</span><span class="size-value" id="codeSizeValue">50%</span></div>
+        <input type="range" class="size-range" id="codeSizeRange" min="25" max="100" step="5" value="50" aria-label="Output size">
       </section>
     </div>
   </div>
@@ -417,12 +427,20 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 <script>
 const NS="http://www.w3.org/2000/svg";
 const $=id=>document.getElementById(id);
-let mode="39",lastSVG="",qrSize=1024,dmSize=8,codeSize=100,scanner=null,scannerRunning=false;
+let mode="39",lastSVG="",qrSize=512,dmSize=8,codeSize=50,scanner=null,scannerRunning=false;
 let barColor="#092d4d",bgColor="#ffffff";
 const settings={c39Check:false,c39Text:true,itfText:true,c128Text:true};
 
 function esc(s){return String(s).replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));}
 function themeColors(){return document.body.classList.contains("light")?{bar:"#092d4d",bg:"#ffffff"}:{bar:"#cdcdcd",bg:"#05080b"};}
+const DEFAULT_PAYLOAD={39:"1002",itf:"1002",128:"1002",dm:"1002",qr:"1002",ean13:"590123412345",upca:"03600029145"};
+function inputValue(){return ($("data").value||"").trim()||DEFAULT_PAYLOAD[mode]||"1002";}
+const INPUT_HINTS={
+ itf:"NOTE: ITF accepts digits 0-9 only, and the total count must be EVEN. Examples: 1234 or 123456.",
+ ean13:"NOTE: EAN-13 accepts digits 0-9 only. Enter 12 or 13 digits; with 12 digits the check digit is added automatically.",
+ upca:"NOTE: UPC-A accepts digits 0-9 only. Enter 11 or 12 digits; with 11 digits the check digit is added automatically."
+};
+function updateHint(){const h=$("hint");if(!h)return;const t=INPUT_HINTS[mode]||"";h.textContent=t;h.style.display=t?"block":"none";}
 function setStatus(msg,error=false){$("status").textContent=msg||"";$("status").className="status"+(error?" error":"");}
 function svgStart(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="${bgColor}"/>`;}
 function downloadText(text,name,type){const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),500);}
@@ -433,7 +451,7 @@ const C39V={"0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"A":10,"
 const C39FROM=Object.fromEntries(Object.entries(C39V).map(([k,v])=>[v,k]));
 
 function renderC39(){
- let raw=$("data").value.toUpperCase();
+ let raw=inputValue().toUpperCase();
  for(const c of raw)if(!(c in C39)||c==="*")return fail("Invalid Code 39 character: "+c);
  let data=raw;if(settings.c39Check)data+=C39FROM[[...raw].reduce((n,c)=>n+C39V[c],0)%43];
  const n=3,w=6,q=30,h=150,text=settings.c39Text,full="*"+data+"*";let width=q*2;
@@ -447,7 +465,7 @@ function renderC39(){
 /* ITF */
 const ITF={"0":"nnwwn","1":"wnnnw","2":"nwnnw","3":"wwnnn","4":"nnwnw","5":"wnwnn","6":"nwwnn","7":"nnnww","8":"wnnwn","9":"nwnwn"};
 function renderITF(){
- let raw=$("data").value.replace(/\s/g,"");
+ let raw=inputValue().replace(/\s/g,"");
  if(!/^\d+$/.test(raw))return fail("ITF accepts digits only.");
  if(raw.length%2)return fail("ITF requires an even number of digits.");
  const n=3,w=6,q=24,h=150;let elems=[["b",n],["s",n],["b",n],["s",n]];
@@ -461,7 +479,7 @@ function renderITF(){
 /* CODE 128-B */
 const B128P=["212222","222122","222221","121223","121322","131222","122213","122312","132212","221213","221312","231212","112232","122132","122231","113222","123122","123221","223211","221132","221231","213212","223112","312131","311222","321122","321221","312212","322112","322211","212123","212321","232121","111323","131123","131321","112313","132113","132311","211313","231113","231311","112133","112331","132131","113123","113321","133121","313121","211331","231131","213113","213311","213131","311123","311321","331121","312113","312311","332111","314111","221411","431111","111224","111422","121124","121421","141122","141221","112214","112412","122114","122411","142112","142211","241211","221114","413111","241112","134111","111242","121142","121241","114212","124112","124211","411212","421112","421211","212141","214121","412121","111143","111341","131141","114113","114311","411113","411311","113141","114131","311141","411131","211412","211214","211232","2331112"];
 function render128(){
- const raw=$("data").value;for(const c of raw)if(c.charCodeAt(0)<32||c.charCodeAt(0)>126)return fail("Code 128-B supports printable ASCII (32–126).");
+ const raw=inputValue();for(const c of raw)if(c.charCodeAt(0)<32||c.charCodeAt(0)>126)return fail("Code 128-B supports printable ASCII (32–126).");
  const codes=[104,...[...raw].map(c=>c.charCodeAt(0)-32)];let sum=104;for(let i=1;i<codes.length;i++)sum+=codes[i]*i;codes.push(sum%103,106);
  const n=3,q=24,h=150,text=settings.c128Text;let width=q*2;
  for(const code of codes)for(const z of B128P[code])width+=parseInt(z)*n;
@@ -473,7 +491,7 @@ function render128(){
 
 /* DATA MATRIX: generated with bwip-js */
 function renderDM(){
- const raw=$("data").value;
+ const raw=inputValue();
  if(typeof bwipjs==="undefined")return fail("Data Matrix library did not load. Check the internet connection once.");
  try{
    const svg=bwipjs.toSVG({bcid:"datamatrix",text:raw||" ",scale:dmSize,padding:12,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
@@ -481,28 +499,33 @@ function renderDM(){
  }catch(e){fail("Unable to generate this Data Matrix. Try different text.");}
 }
 
+/* EAN-13 / UPC-A (retail 1D) via bwip-js */
+function renderBwip1D(bcid,label){
+ const raw=inputValue().replace(/\s/g,"");
+ if(typeof bwipjs==="undefined")return fail("Barcode library did not load. Check the internet connection once.");
+ try{
+   const svg=bwipjs.toSVG({bcid:bcid,text:raw,scale:4,height:15,includetext:true,textxalign:"center",barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
+   showSVG(svg,label);
+ }catch(e){fail("Unable to generate "+label+". Check the number of digits.");}
+}
+function renderEAN13(){renderBwip1D("ean13","EAN-13")}
+function renderUPCA(){renderBwip1D("upca","UPC-A")}
+
 /* QR: generated locally by QRCode.js, no image URL/API */
 function renderQR(){
- const text=$("data").value;
+ const text=inputValue();
+ const qrPx=Math.max(64,Math.round(512*codeSize/100));
  $("previewArea").innerHTML=`<article class="preview-card">
   <div class="card-head"><span>QR</span><span>[ LIVE ]</span></div>
   <div class="card-title">[ QR CODE PREVIEW ]</div>
-  <div class="preview"><div class="qr-box" id="qrBox" style="width:${codeSize}%"></div></div>
-  <div class="meta"><span>QR / LOCAL</span><span id="qrMetaSize">—</span></div>
+  <div class="preview"><div class="qr-box" id="qrBox" style="width:min(${qrPx}px,100%)"></div></div>
+  <div class="meta"><span>QR / LOCAL</span><span>${qrPx} PX</span></div>
  </article>`;
  const box=$("qrBox");
  if(typeof QRCode==="undefined"){return fail("QR library did not load. Check the internet connection once to load QR support.")}
  try{
-   const visible=Math.round(box.getBoundingClientRect().width)||qrSize;
-   const px=Math.max(64,Math.round(visible*(window.devicePixelRatio||1)));
-   new QRCode(box,{text:text||" ",width:px,height:px,colorDark:barColor,colorLight:bgColor,correctLevel:QRCode.CorrectLevel.M});
-   updateQrMeta(visible);
+   new QRCode(box,{text:text||" ",width:qrPx,height:qrPx,colorDark:barColor,colorLight:bgColor,correctLevel:QRCode.CorrectLevel.M});
  }catch(e){fail("Unable to generate this QR payload. Try shorter text.");}
-}
-function updateQrMeta(fallback){
- const box=$("qrBox"),span=$("qrMetaSize");if(!box||!span)return;
- const w=Math.round(box.getBoundingClientRect().width)||fallback||0;
- span.textContent=w+" PX";
 }
 function ensureViewBox(svg){
  if(/\bviewBox=/i.test(svg))return svg;
@@ -521,7 +544,7 @@ function showSVG(svg,name){
  lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
 }
 function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
-function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else renderQR();}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
 
 /* settings */
 function settingsMarkup(){
@@ -540,6 +563,7 @@ function settingsMarkup(){
  if(mode==="itf")return fontSetting + `<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.itfText?"checked":""}></div>`;
  if(mode==="128")return fontSetting + `<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.c128Text?"checked":""}></div>`;
  if(mode==="dm")return fontSetting + `<div class="setting"><span>FORMAT</span><span>ECC 200 / SQUARE</span></div>`;
+ if(mode==="ean13"||mode==="upca")return fontSetting + `<div class="setting"><span>FORMAT</span><span>RETAIL / EAN-UPC</span></div>`;
  return fontSetting + `<div class="setting"><span>GENERATION</span><span>LOCAL / IN PAGE</span></div>`;
 }
 function openSettings(){
@@ -562,8 +586,8 @@ function openSettings(){
 
 /* camera */
 const ZX_FORMAT_NAMES={0:"aztec",1:"codabar",2:"code_39",3:"code_93",4:"code_128",5:"data_matrix",6:"ean_8",7:"ean_13",8:"itf",9:"maxicode",10:"pdf_417",11:"qr_code",12:"rss_14",13:"rss_expanded",14:"upc_a",15:"upc_e"};
-const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm"};
-const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR"};
+const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm",ean_13:"ean13",upc_a:"upca"};
+const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR",ean13:"EAN-13",upca:"UPC-A"};
 function openCameraPanel(){$("cameraPanel").classList.add("open");document.body.classList.add("scanning")}
 function closeCameraPanel(){$("cameraPanel").classList.remove("open");document.body.classList.remove("scanning")}
 async function startCamera(){
@@ -576,7 +600,11 @@ async function startCamera(){
  try{
    const BF=ZXingBrowser.BarcodeFormat;
    const hints=new Map();
-   hints.set(2,[BF.QR_CODE,BF.CODE_39,BF.CODE_128,BF.ITF,BF.DATA_MATRIX]); // DecodeHintType.POSSIBLE_FORMATS
+   hints.set(2,[ // DecodeHintType.POSSIBLE_FORMATS — everything ZXing can read
+     BF.QR_CODE,BF.DATA_MATRIX,BF.AZTEC,BF.PDF_417,BF.MAXICODE,
+     BF.CODE_39,BF.CODE_93,BF.CODE_128,BF.CODABAR,BF.ITF,
+     BF.EAN_13,BF.EAN_8,BF.UPC_A,BF.UPC_E,BF.RSS_14,BF.RSS_EXPANDED
+   ]);
    hints.set(3,true); // DecodeHintType.TRY_HARDER
    scanner=new ZXingBrowser.BrowserMultiFormatReader(hints);
    scannerRunning=true;
@@ -588,17 +616,16 @@ async function startCamera(){
          const value=result.getText();
          $("data").value=value;
          $("data").scrollTop=0;
-         let m;
-         try{m=ZX_TO_MODE[ZX_FORMAT_NAMES[result.getBarcodeFormat()]]}catch(e){}
+         let fmt,m;
+         try{fmt=ZX_FORMAT_NAMES[result.getBarcodeFormat()];m=ZX_TO_MODE[fmt]}catch(e){}
          if(m)setMode(m);else render();
          stopCamera();
          closeCameraPanel();
-         $("cameraStatus").textContent="Scanned "+(m?modeLabels[m]:"code")+" — preview updated. Use COPY or SAVE.";
-         setStatus("Scanned "+(m?modeLabels[m]:"code")+" — payload loaded. Use COPY or SAVE.");
-         $("data").focus();
-         const wb=document.querySelector(".workbench");if(wb)wb.scrollIntoView({behavior:"smooth",block:"start"});
+         const label=m?modeLabels[m]:(fmt?fmt.replace(/_/g," ").toUpperCase():"code");
+         $("cameraStatus").textContent="Scanned "+label+(m?"":" (read-only)")+" — payload loaded.";
+         setStatus("Scanned "+label+(m?"":" (read-only — use COPY)")+" — payload loaded.");
        } else if(scannerRunning){
-         $("cameraStatus").textContent="Scanning… QR / Code 39 / Code 128 / ITF / Data Matrix";
+         $("cameraStatus").textContent="Scanning… try to fill the frame with the barcode";
        }
      }
    );
@@ -616,8 +643,11 @@ $("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){c
 $("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();closeCameraPanel();$("cameraStatus").textContent="Camera stopped.";};
 
 /* mode */
-const titles={39:"Code 39 generator.",itf:"ITF generator.",128:"Code 128 generator.",dm:"Data Matrix generator.",qr:"QR code generator."};
-function setMode(m){
+const titles={39:"Code 39 generator.",itf:"ITF generator.",128:"Code 128 generator.",dm:"Data Matrix generator.",qr:"QR code generator.",ean13:"EAN-13 generator.",upca:"UPC-A generator."};
+const MODE_HASH={39:"Code39",itf:"ITF",128:"Code128",dm:"DataMatrix",ean13:"EAN13",upca:"UPCA",qr:"QR"};
+const HASH_MODE={};for(const k in MODE_HASH)HASH_MODE[MODE_HASH[k].toLowerCase()]=k;
+function modeFromHash(){return HASH_MODE[(location.hash||"").replace(/^#/,"").toLowerCase()]||null}
+function setMode(m,fromHash){
  mode=m;
  document.querySelectorAll(".switch button").forEach(b=>b.classList.toggle("active",b.dataset.mode===m));
  $("title").textContent=titles[m]||"";
@@ -625,8 +655,10 @@ function setMode(m){
  $("data").setAttribute("autocapitalize",m==="39"?"characters":"none");
  document.querySelector('#saveOptions button[data-format="svg"]').disabled=m==="qr";
  render();
+ if(!fromHash&&MODE_HASH[m]&&(location.hash||"").replace(/^#/,"")!==MODE_HASH[m])location.hash=MODE_HASH[m];
 }
 document.querySelectorAll(".switch button").forEach(btn=>btn.onclick=()=>setMode(btn.dataset.mode));
+window.addEventListener("hashchange",()=>{const m=modeFromHash();if(m&&m!==mode)setMode(m,true)});
 $("data").addEventListener("input",render);
 
 /* output size slider */
@@ -639,14 +671,14 @@ if(sizeRange){
 }
 /* copy payload */
 $("copyBtn").onclick=async()=>{
- const text=$("data").value;
+ const text=inputValue();
  try{await navigator.clipboard.writeText(text);setStatus("Copied to clipboard.");}
  catch(e){const t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");setStatus("Copied to clipboard.");}catch(_){setStatus("Copy failed.",true);}t.remove();}
 };
 
 /* save menu */
 function payloadFileName(){
- let name=($("data").value||"").trim().replace(/[\\/:*?"<>|\r\n\t]+/g,"_").replace(/\s+/g," ").replace(/^\.+/,"").trim();
+ let name=(inputValue()||"").trim().replace(/[\\/:*?"<>|\r\n\t]+/g,"_").replace(/\s+/g," ").replace(/^\.+/,"").trim();
  if(!name)name="barcode";
  if(name.length>80)name=name.slice(0,80).trim();
  return name||"barcode";
@@ -655,13 +687,18 @@ function toggleSaveMenu(open){const menu=$("saveMenu");menu.classList.toggle("op
 $("saveBtn").onclick=e=>{e.stopPropagation();toggleSaveMenu(!$("saveMenu").classList.contains("open"))};
 document.querySelectorAll("#saveOptions button").forEach(b=>b.onclick=()=>{toggleSaveMenu(false);saveAs(b.dataset.format)});
 document.addEventListener("click",e=>{if(!$("saveMenu").contains(e.target))toggleSaveMenu(false)});
-function targetSize(el){
+function targetSize(el,source){
  const r=el.getBoundingClientRect();
  const dpr=Math.min(window.devicePixelRatio||1,2);
- return {w:Math.max(1,Math.round(r.width*dpr)),h:Math.max(1,Math.round(r.height*dpr))};
+ let w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);
+ if(w<1||h<1){
+   w=(source&&(source.naturalWidth||source.width))||480;
+   h=(source&&(source.naturalHeight||source.height))||w;
+ }
+ return {w:Math.max(1,w),h:Math.max(1,h)};
 }
 function exportElement(source,sizeEl,format){
- const {w,h}=targetSize(sizeEl);
+ const {w,h}=targetSize(sizeEl,source);
  const out=document.createElement("canvas");out.width=w;out.height=h;
  const ctx=out.getContext("2d");ctx.fillStyle=bgColor;ctx.fillRect(0,0,w,h);ctx.drawImage(source,0,0,w,h);
  out.toBlob(blob=>{if(!blob)return;const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=payloadFileName()+"."+format;a.click();setTimeout(()=>URL.revokeObjectURL(u),500)},format==="jpg"?"image/jpeg":"image/png",format==="jpg"?0.92:undefined);
@@ -679,9 +716,12 @@ function sizedSVG(){
 function saveAs(format){
  if(mode==="qr"){
    if(format==="svg")return;
-   const canvas=document.querySelector("#qrBox canvas");
-   if(!canvas){setStatus("Nothing to export yet.",true);return}
-   exportElement(canvas,canvas,format);return;
+   const box=$("qrBox");
+   const canvas=box&&box.querySelector("canvas");
+   const imgEl=box&&box.querySelector("img");
+   const source=canvas||imgEl;
+   if(!source){setStatus("Nothing to export yet.",true);return}
+   exportElement(source,imgEl||box||source,format);return;
  }
  if(!lastSVG){setStatus("Nothing to export yet.",true);return}
  if(format==="svg"){downloadText(sizedSVG(),payloadFileName()+".svg","image/svg+xml;charset=utf-8");return}
@@ -706,7 +746,8 @@ $("themeSwitch").onclick=()=>{document.body.classList.toggle("light");localStora
 updateThemeButton();
 const savedFontSize=localStorage.getItem("barcodeStudioFontSize")||"15";
 document.documentElement.style.setProperty("--ui-scale",(savedFontSize/15).toFixed(4));
-render();
+const startMode=modeFromHash();
+if(startMode&&startMode!==mode)setMode(startMode,true);else render();
 </script>
 </body>
 </html>
