@@ -116,6 +116,55 @@ h2{margin:5px 0 0;font-size:23px;letter-spacing:-.5px}
 .size-bar-head{display:flex;justify-content:space-between;align-items:center;font:10px "Courier New",monospace;letter-spacing:1.6px}
 .size-bar .size-range{margin-top:12px}
 .size-row+.size-row{margin-top:16px}
+#batchBtn{width:100%;margin-top:16px}
+.modal.batch-modal{width:min(1260px,96vw);max-height:95svh;padding:22px}
+.batch-modal .modal-head strong{font-size:16px;letter-spacing:1.5px}
+.batch-sub{font-weight:400;color:var(--muted);letter-spacing:1px}
+.batch-drop{border:2px dashed var(--line);background:var(--card);padding:22px;text-align:center;font:14px/1.7 "JetBrains Mono",monospace;color:var(--muted);margin-bottom:18px;cursor:pointer;transition:border-color .15s,background .15s}
+.batch-drop.over{border-color:var(--blue2);background:var(--button);color:var(--ink)}
+.batch-drop strong{color:var(--ink)}
+.batch-browse{border:1px solid var(--line);background:var(--button);color:var(--btnText);padding:6px 14px;font:13px "JetBrains Mono",monospace;cursor:pointer;margin-left:4px}
+.batch-browse:hover{background:var(--buttonHover);color:#fff}
+.batch-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 22px;margin-bottom:16px}
+.batch-field{display:flex;flex-direction:column;gap:8px;font:13px "JetBrains Mono",monospace;letter-spacing:1px;color:var(--muted)}
+.batch-field select{min-height:46px;border:1px solid var(--line);background:var(--button);color:var(--btnText);padding:9px;font:14px "JetBrains Mono",monospace}
+.batch-slider{display:flex;flex-direction:column;gap:6px}
+.batch-slider-head{display:flex;justify-content:space-between;font:13px "JetBrains Mono",monospace;letter-spacing:1px;color:var(--muted)}
+.batch-slider-head b{color:var(--blue2)}
+.batch-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px;font:13px "JetBrains Mono",monospace}
+.batch-zoom{display:flex;align-items:center;gap:8px}
+.batch-zoom button{min-height:38px;min-width:44px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:15px "JetBrains Mono",monospace;cursor:pointer;padding:4px 12px}
+.batch-zoom button:hover{background:var(--buttonHover);color:#fff}
+.batch-zoom span{min-width:60px;text-align:center;color:var(--blue2);font-weight:bold;font-size:14px}
+.batch-measure{color:var(--blue2);font-weight:bold;font-size:14px}
+.batch-statusrow{font:13px "JetBrains Mono",monospace;color:var(--muted);margin-bottom:12px}
+.batch-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.batch-btns .action{font-size:13px;letter-spacing:1.2px;min-height:46px;padding:10px 18px}
+.batch-stepper{display:flex;align-items:center;gap:8px;font:13px "JetBrains Mono",monospace;color:var(--muted)}
+.batch-stepper-label{flex:1}
+.batch-stepper b{min-width:36px;text-align:center;color:var(--accent1);font-size:16px}
+.batch-stepper button{min-height:38px;min-width:42px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:16px "JetBrains Mono",monospace;cursor:pointer}
+.batch-stepper button:hover{background:var(--buttonHover);color:#fff}
+.batch-stepper input[type=number]{width:76px;min-height:38px;border:1px solid var(--line);background:var(--button);color:var(--btnText);padding:6px;font:13px "JetBrains Mono",monospace;text-align:center}
+#batchPaperRow{display:none;grid-column:1/-1}
+.batch-advanced{margin-bottom:14px}
+.batch-adv-toggle{width:100%;min-height:40px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:12px "JetBrains Mono",monospace;letter-spacing:1px;cursor:pointer;text-align:left;padding:9px 14px}
+.batch-adv-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;padding:14px;border:1px solid var(--line);border-top:0;background:var(--card)}
+.batch-adv-panel[hidden]{display:none}
+.batch-progress{position:relative;height:26px;border:1px solid var(--line);background:var(--card);margin-bottom:14px;overflow:hidden}
+.batch-progress-fill{height:100%;width:0;background:var(--accent1);transition:width .12s linear}
+.batch-progress span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:12px "JetBrains Mono",monospace;color:var(--ink)}
+.batch-preview{max-height:62svh;overflow:auto;background:#8a8f96;border:1px solid var(--line);padding:20px}
+.batch-page{background:#fff;box-shadow:0 3px 16px rgba(0,0,0,.35);display:grid;margin:0 auto 22px}
+.batch-cell{display:flex;align-items:center;justify-content:center;overflow:hidden}
+.batch-cell.pos-below,.batch-cell.pos-above{flex-direction:column}
+.batch-cell.pos-right,.batch-cell.pos-left{flex-direction:row;gap:0.4mm}
+.batch-cell.pos-above .batch-cap{order:-1}
+.batch-cell.pos-left .batch-cap{order:-1}
+.batch-cell img{display:block}
+.batch-cap{font-family:"PT Mono",monospace;color:#000;line-height:1;text-align:center;overflow:hidden;white-space:nowrap}
+.batch-empty{font:14px "JetBrains Mono",monospace;color:#333;padding:30px;text-align:center}
+@media(max-width:700px){.batch-controls{grid-template-columns:1fr}}
 .panel{
   background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:15px
 }
@@ -244,6 +293,7 @@ body.scanning .camera-panel{margin-top:0}
 .setting select{min-height:40px;border:1px solid var(--line);background:var(--button);color:var(--btnText);padding:7px;font:10px "Courier New",monospace}
 .setting select option{background:var(--card);color:var(--ink)}
 .size-value{font:11px "Courier New",monospace;color:var(--blue2);font-weight:bold;letter-spacing:1px}
+.size-select{min-height:32px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:10px "Courier New",monospace;padding:4px 8px}
 .qr-slider-wrap{padding:16px 2px 6px}
 .size-range{
   -webkit-appearance:none;appearance:none;display:block;width:100%;height:6px;border-radius:999px;
@@ -365,6 +415,16 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
   .footer{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
 }
 @media(hover:none){button:active{opacity:.72}}
+
+/* Distinct colour accents (Settings) */
+:root{--accent1:#df775a;--accent2:#df775a}
+.switch button.active,.more-options button.active{background:var(--accent1)!important;color:#fff!important;border-color:var(--accent1)!important}
+.size-range::-webkit-slider-thumb{background:var(--accent1)!important;border-color:var(--accent1)!important}
+.size-range::-moz-range-thumb{background:var(--accent1)!important;border-color:var(--accent1)!important}
+.size-value,.batch-measure,.batch-slider-head b{color:var(--accent1)!important}
+.scan-button,.theme-switch,.action,.more-btn,.switch,.switch button,.dpi-opts button,.batch-zoom button,.batch-browse,.batch-field select,.setting select,.save-options,.batch-btn{border-color:var(--accent2)!important}
+.action:hover,.action.secondary:hover,.bottom-action:hover,.close:hover,.theme-switch:hover,.scan-button:hover,.switch button:hover:not(.active),.more-options button:hover,.dpi-opts button:hover,.batch-zoom button:hover,.batch-browse:hover{background:var(--accent2)!important;color:#fff!important}
+body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
 </style>
 </head>
 
@@ -373,7 +433,7 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 <i class="cross c1"></i><i class="cross c2"></i><i class="cross c3"></i><i class="cross c4"></i>
 
 <header>
-  <div class="topbar"><div class="brand">Barcode Studio</div><div class="top-actions"><button class="scan-button" id="cameraButton">SCAN CAMERA</button><button class="scan-button" id="settingsBtn">SETTINGS +</button><button class="theme-switch" id="themeSwitch" aria-label="Toggle dark mode"><span id="themeIcon">☀</span><span id="themeLabel">LIGHT</span></button></div></div>
+  <div class="topbar"><div class="brand">Barcode Studio</div><div class="top-actions"><button class="scan-button" id="cameraButton">SCAN CAMERA</button><button class="scan-button" id="settingsBtn">SETTINGS +</button><button class="theme-switch" id="themeSwitch" aria-label="Toggle dark mode"><span id="themeIcon">☾</span><span id="themeLabel">DARK</span></button></div></div>
   <div class="kicker">Generate, Save, Read CODE 39 / ITF / CODE 128 / DATA MATRIX / EAN-13 / UPC-A / QR codes</div>
   <div class="rule"></div>
 </header>
@@ -443,6 +503,15 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
     <div class="output-col">
       <section id="previewArea"></section>
       <section class="size-bar" id="sizeBar">
+        <div class="size-row" id="qrTextControls" style="display:none">
+          <div class="size-bar-head"><span>[ TEXT POSITION ]</span>
+            <select id="qrTextPosInline" class="size-select">
+              <option value="right">RIGHT</option><option value="left">LEFT</option><option value="top">TOP</option><option value="bottom">BOTTOM</option>
+            </select>
+          </div>
+          <div class="size-bar-head" style="margin-top:14px"><span>[ TEXT PADDING ]</span><span class="size-value" id="qrTextGapVal">12 PX</span></div>
+          <input type="range" class="size-range" id="qrTextGap" min="0" max="40" step="1" value="12" aria-label="Text padding">
+        </div>
         <div class="size-row" id="textSizeRow" style="display:none">
           <div class="size-bar-head"><span>[ TEXT SIZE ]</span><span class="size-value" id="textSizeValue">16 PX</span></div>
           <input type="range" class="size-range" id="textSizeRange" min="8" max="48" step="1" value="16" aria-label="Text size">
@@ -451,6 +520,7 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
           <div class="size-bar-head"><span>[ OUTPUT SIZE ]</span><span class="size-value" id="codeSizeValue">50%</span></div>
           <input type="range" class="size-range" id="codeSizeRange" min="10" max="100" step="5" value="50" aria-label="Output size">
         </div>
+        <button type="button" class="scan-button" id="batchBtn">Batch generator</button>
       </section>
     </div>
   </div>
@@ -466,12 +536,95 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
   </div>
 </div>
 
+<div class="modal-backdrop" id="batchBackdrop">
+  <div class="modal batch-modal" role="dialog" aria-modal="true" aria-label="Batch QR to PDF">
+    <div class="modal-head"><strong>BATCH — QR → PDF <span class="batch-sub">(QR only)</span></strong><button class="close" id="closeBatch">×</button></div>
+
+    <div class="batch-drop" id="batchDrop">
+      <input type="file" id="batchFile" accept=".csv,.tsv,.json,.xls,.xlsx" hidden>
+      <div class="batch-drop-inner">
+        <strong>Drag &amp; drop</strong> an XLS / XLSX / JSON / CSV / TSV file here<br>
+        or <button type="button" class="batch-browse" id="batchBrowse">choose a file</button>
+      </div>
+    </div>
+
+    <div class="batch-controls">
+      <label class="batch-field">PAGE SIZE
+        <select id="batchPage">
+          <option value="a4">A4 — 21.0 × 29.7 cm</option>
+          <option value="a5">A5 — 14.8 × 21.0 cm</option>
+          <option value="letter">LETTER — 21.6 × 27.9 cm</option>
+          <option value="custom">CUSTOM…</option>
+        </select>
+      </label>
+      <label class="batch-field">TEXT ORIENTATION
+        <select id="batchTextPos">
+          <option value="below">BELOW</option>
+          <option value="above">ABOVE</option>
+          <option value="right">RIGHT</option>
+          <option value="left">LEFT</option>
+        </select>
+      </label>
+      <div class="batch-stepper" id="batchPaperRow">
+        <span class="batch-stepper-label">PAPER (CM)</span>
+        <input type="number" id="batchPaperW" min="3" max="120" step="0.5" value="10"> <span>×</span>
+        <input type="number" id="batchPaperH" min="3" max="120" step="0.5" value="15">
+      </div>
+      <div class="batch-stepper"><span class="batch-stepper-label">COLUMNS</span><button type="button" id="batchColsMinus">−</button><b id="batchColsVal">7</b><button type="button" id="batchColsPlus">+</button></div>
+      <div class="batch-stepper"><span class="batch-stepper-label">ROWS</span><button type="button" id="batchRowsMinus">−</button><b id="batchRowsVal">35</b><button type="button" id="batchRowsPlus">+</button></div>
+      <div class="batch-slider"><div class="batch-slider-head"><span>QR SIZE</span><b id="batchQrVal">0.5 cm</b></div><input type="range" class="size-range" id="batchQr" min="3" max="30" step="1" value="5" aria-label="QR size"></div>
+      <div class="batch-slider"><div class="batch-slider-head"><span>TEXT SIZE</span><b id="batchTextVal">2.5 mm</b></div><input type="range" class="size-range" id="batchText" min="10" max="60" step="1" value="25" aria-label="Batch text size"></div>
+      <div class="batch-slider"><div class="batch-slider-head"><span>TEXT PADDING</span><b id="batchTextGapVal">0.5 mm</b></div><input type="range" class="size-range" id="batchTextGap" min="0" max="60" step="1" value="5" aria-label="Text padding"></div>
+      <div class="batch-slider"><div class="batch-slider-head"><span>GAP</span><b id="batchMarginVal">0.5 mm</b></div><input type="range" class="size-range" id="batchMargin" min="0" max="30" step="1" value="5" aria-label="Gap between labels"></div>
+      <div class="batch-slider"><div class="batch-slider-head"><span>SAFE MARGIN</span><b id="batchSafeVal">6 mm</b></div><input type="range" class="size-range" id="batchSafe" min="0" max="30" step="1" value="6" aria-label="Safe print margin"></div>
+    </div>
+
+    <div class="batch-advanced">
+      <button type="button" class="batch-adv-toggle" id="batchAdvToggle">ADVANCED ▾ CUSTOM MARGINS</button>
+      <div class="batch-adv-panel" id="batchAdvPanel" hidden>
+        <div class="batch-slider"><div class="batch-slider-head"><span>TOP</span><b id="batchMTVal">6 mm</b></div><input type="range" class="size-range" id="batchMT" min="0" max="40" step="1" value="6"></div>
+        <div class="batch-slider"><div class="batch-slider-head"><span>RIGHT</span><b id="batchMRVal">6 mm</b></div><input type="range" class="size-range" id="batchMR" min="0" max="40" step="1" value="6"></div>
+        <div class="batch-slider"><div class="batch-slider-head"><span>BOTTOM</span><b id="batchMBVal">6 mm</b></div><input type="range" class="size-range" id="batchMB" min="0" max="40" step="1" value="6"></div>
+        <div class="batch-slider"><div class="batch-slider-head"><span>LEFT</span><b id="batchMLVal">6 mm</b></div><input type="range" class="size-range" id="batchML" min="0" max="40" step="1" value="6"></div>
+      </div>
+    </div>
+
+    <div class="batch-progress" id="batchProgress" hidden><div class="batch-progress-fill" id="batchProgressFill"></div><span id="batchProgressText">0%</span></div>
+
+    <div class="batch-toolbar">
+      <div class="batch-zoom">
+        <button type="button" id="batchZoomOut" title="Zoom out">−</button>
+        <span id="batchZoomVal">100%</span>
+        <button type="button" id="batchZoomIn" title="Zoom in">+</button>
+        <button type="button" id="batchZoomFit">FIT</button>
+        <button type="button" id="batchZoom100">100%</button>
+      </div>
+      <div id="batchMeasure" class="batch-measure">QR SIZE: —</div>
+    </div>
+    <div class="batch-statusrow" id="batchCount">No file loaded</div>
+
+    <div class="batch-btns">
+      <button type="button" class="action" id="batchPdf">DOWNLOAD PDF</button>
+      <button type="button" class="action secondary" id="batchClear">CLEAR</button>
+    </div>
+
+    <div class="batch-preview" id="batchPreview"></div>
+  </div>
+</div>
+
 <script>
 const NS="http://www.w3.org/2000/svg";
 const $=id=>document.getElementById(id);
-let mode="39",lastSVG="",qrSize=512,dmSize=8,codeSize=50,qrText=false,qrTextPos="right",qrTextSize=16,exportDpi=72,scanner=null,scannerRunning=false;
+let mode="39",lastSVG="",qrSize=512,dmSize=8,codeSize=50,qrText=false,qrTextPos="right",qrTextSize=16,qrTextGap=12,exportDpi=72,scanner=null,scannerRunning=false;
 let barColor="#092d4d",bgColor="#ffffff";
 const settings={c39Check:false,c39Text:true,itfText:true,c128Text:true};
+const ACCENTS=[["CORAL","#df775a"],["BLUE","#72a9d8"],["TEAL","#4bbf9c"],["GREEN","#7bbf4b"],["PURPLE","#9b7bd8"],["ORANGE","#eb9646"],["PINK","#e06a9c"],["GRAY","#8a8f96"]];
+let edgeOn=true,color1="#df775a",color2="#df775a";
+function applyLookSettings(){
+ document.documentElement.style.setProperty("--accent1",color1);
+ document.documentElement.style.setProperty("--accent2",color2);
+ document.body.classList.toggle("edge-off",!edgeOn);
+}
 
 function esc(s){return String(s).replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));}
 function themeColors(){return document.body.classList.contains("light")?{bar:"#092d4d",bg:"#ffffff"}:{bar:"#cdcdcd",bg:"#05080b"};}
@@ -568,7 +721,7 @@ function renderQR(){
  const text=inputValue();
  const qrPx=Math.max(64,Math.round(512*codeSize/100));
  const boxHtml=`<div class="qr-box" id="qrBox" style="width:min(${qrPx}px,100%)"></div>`;
- const figHtml=qrText?`<figure class="qr-figure pos-${qrTextPos}">${boxHtml}<figcaption class="qr-caption" style="font-size:${qrTextSize}px;color:${barColor}">${esc(text)}</figcaption></figure>`:boxHtml;
+ const figHtml=qrText?`<figure class="qr-figure pos-${qrTextPos}" style="gap:${qrTextGap}px">${boxHtml}<figcaption class="qr-caption" style="font-size:${qrTextSize}px;color:${barColor}">${esc(text)}</figcaption></figure>`:boxHtml;
  $("previewArea").innerHTML=`<article class="preview-card">
   <div class="card-head"><span>QR</span><span>[ LIVE ]</span></div>
   <div class="card-title">[ QR CODE PREVIEW ]</div>
@@ -598,7 +751,7 @@ function showSVG(svg,name){
  lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
 }
 function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
-function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
 
 /* settings */
 function settingsMarkup(){
@@ -613,6 +766,8 @@ function settingsMarkup(){
      </select>
    </div>`;
  const bgSetting = `<div class="setting"><span>ANIMATED BACKGROUND</span><input id="bgToggle" type="checkbox" ${bgEnabled?"checked":""}></div>`;
+ const colorOpts=v=>ACCENTS.map(a=>`<option value="${a[1]}"${a[1]===v?" selected":""}>${a[0]}</option>`).join("");
+ const lookSetting = `<div class="setting"><span>COLORED EDGE</span><input id="edgeToggle" type="checkbox" ${edgeOn?"checked":""}></div><div class="setting"><span>DISTINCT COLOR 1 — SELECTED</span><select id="color1Setting">${colorOpts(color1)}</select></div><div class="setting"><span>DISTINCT COLOR 2 — BORDER/HOVER</span><select id="color2Setting">${colorOpts(color2)}</select></div>`;
 
  let body;
  if(mode==="39")body=`<div class="setting"><span>MOD-43 CHECKSUM</span><input id="s1" type="checkbox" ${settings.c39Check?"checked":""}></div><div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s2" type="checkbox" ${settings.c39Text?"checked":""}></div>`;
@@ -621,7 +776,7 @@ function settingsMarkup(){
  else if(mode==="dm")body=`<div class="setting"><span>FORMAT</span><span>ECC 200 / SQUARE</span></div>`;
  else if(mode==="ean13"||mode==="upca")body=`<div class="setting"><span>FORMAT</span><span>RETAIL / EAN-UPC</span></div>`;
  else body=`<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="qrTextSetting" type="checkbox" ${qrText?"checked":""}></div><div class="setting"><span>TEXT POSITION</span><select id="qrPosSetting"><option value="right">RIGHT</option><option value="left">LEFT</option><option value="top">TOP</option><option value="bottom">BOTTOM</option></select></div><div class="setting"><span>GENERATION</span><span>LOCAL / IN PAGE</span></div>`;
- return fontSetting + bgSetting + body;
+ return fontSetting + bgSetting + lookSetting + body;
 }
 function openSettings(){
  $("settingsTitle").textContent=mode==="39"?"CODE 39 SETTINGS":mode==="itf"?"ITF SETTINGS":mode==="128"?"CODE 128 SETTINGS":mode==="dm"?"DATA MATRIX SETTINGS":"QR SETTINGS";
@@ -642,6 +797,9 @@ function openSettings(){
  const qp=$("qrPosSetting");if(qp){qp.value=qrTextPos;qp.onchange=()=>{qrTextPos=qp.value;render();syncURL(false)}};
  const bg=$("bgToggle");
  if(bg)bg.onchange=()=>{bgEnabled=bg.checked;localStorage.setItem("barcodeStudioBg",bgEnabled?"on":"off");if(bgEnabled)enableBackground();else stopBackground()};
+ const et=$("edgeToggle");if(et)et.onchange=()=>{edgeOn=et.checked;applyLookSettings();localStorage.setItem("barcodeStudioEdge",edgeOn?"on":"off")};
+ const c1=$("color1Setting");if(c1)c1.onchange=()=>{color1=c1.value;applyLookSettings();localStorage.setItem("barcodeStudioColor1",color1)};
+ const c2=$("color2Setting");if(c2)c2.onchange=()=>{color2=c2.value;applyLookSettings();localStorage.setItem("barcodeStudioColor2",color2)};
  $("modalBackdrop").classList.add("open");
 }
 
@@ -713,6 +871,7 @@ function parseHash(){
  const num=re=>{const m=raw.match(re);return m?parseInt(m[1],10):null};
  const size=num(/[?&]size=(\d+)/);
  const qrtsize=num(/[?&]qrtsize=(\d+)/);
+ const qrpad=num(/[?&]qrpad=(\d+)/);
  const dpi=num(/[?&]dpi=(\d+)/);
  const mf=raw.match(/[?&]format=(svg|png|jpg)/i);const format=mf?mf[1].toLowerCase():null;
  const mt=raw.match(/[?&]qrtext=([01])/);const qrtext=mt?mt[1]==="1":null;
@@ -725,7 +884,7 @@ function parseHash(){
    try{d=decodeURIComponent(d)}catch(e){}
    data=d;
  }
- return {mode:HASH_MODE[modePart.toLowerCase()]||null,data:data,size:size,qrtext:qrtext,qrpos:qrpos,qrtsize:qrtsize,dpi:dpi,format:format};
+ return {mode:HASH_MODE[modePart.toLowerCase()]||null,data:data,size:size,qrtext:qrtext,qrpos:qrpos,qrtsize:qrtsize,qrpad:qrpad,dpi:dpi,format:format};
 }
 function modeFromHash(){return parseHash().mode}
 function buildHash(){
@@ -733,7 +892,7 @@ function buildHash(){
  const d=($("data").value||"").trim();
  if(d)h+="?="+encodeURIComponent(d);
  h+="&size="+codeSize;
- if(qrText)h+="&qrtext=1&qrpos="+qrTextPos+"&qrtsize="+qrTextSize;
+ if(qrText)h+="&qrtext=1&qrpos="+qrTextPos+"&qrtsize="+qrTextSize+"&qrpad="+qrTextGap;
  if(exportDpi!==72)h+="&dpi="+exportDpi;
  return h;
 }
@@ -750,6 +909,7 @@ function applyHash(){
  if(h.qrtext!==null)qrText=h.qrtext;
  if(h.qrpos)qrTextPos=h.qrpos;
  if(h.qrtsize!==null&&!isNaN(h.qrtsize)){qrTextSize=Math.min(48,Math.max(8,h.qrtsize));paintTextSlider()}
+ if(h.qrpad!==null&&!isNaN(h.qrpad)){qrTextGap=Math.min(40,Math.max(0,h.qrpad));paintGapSlider()}
  if(h.dpi===300||h.dpi===72)exportDpi=h.dpi;
  if(h.mode&&h.mode!==mode)setMode(h.mode,true);else render();
  if(h.format)setTimeout(()=>{try{saveAs(h.format)}catch(e){}},500);
@@ -782,7 +942,7 @@ $("data").addEventListener("input",()=>{render();syncURL(false)});
 const sizeRange=$("codeSizeRange");
 function paintSizeSlider(){
  const val=$("codeSizeValue");
- if(sizeRange){const pct=(codeSize-10)/90*100;sizeRange.style.background=`linear-gradient(90deg,var(--blue2) ${pct}%,var(--line) ${pct}%)`;sizeRange.value=codeSize}
+ if(sizeRange){const pct=(codeSize-10)/90*100;sizeRange.style.background=`linear-gradient(90deg,var(--accent1) ${pct}%,var(--line) ${pct}%)`;sizeRange.value=codeSize}
  if(val)val.textContent=codeSize+"%";
 }
 if(sizeRange){
@@ -793,14 +953,29 @@ if(sizeRange){
 const textRange=$("textSizeRange");
 function paintTextSlider(){
  const val=$("textSizeValue");
- if(textRange){const pct=(qrTextSize-8)/40*100;textRange.style.background=`linear-gradient(90deg,var(--blue2) ${pct}%,var(--line) ${pct}%)`;textRange.value=qrTextSize}
+ if(textRange){const pct=(qrTextSize-8)/40*100;textRange.style.background=`linear-gradient(90deg,var(--accent1) ${pct}%,var(--line) ${pct}%)`;textRange.value=qrTextSize}
  if(val)val.textContent=qrTextSize+" PX";
 }
-function updateTextSliderVisibility(){const row=$("textSizeRow");if(row)row.style.display=(mode==="qr"&&qrText)?"block":"none"}
+const gapRange=$("qrTextGap");
+function paintGapSlider(){
+ const val=$("qrTextGapVal");
+ if(gapRange){const pct=qrTextGap/40*100;gapRange.style.background=`linear-gradient(90deg,var(--accent1) ${pct}%,var(--line) ${pct}%)`;gapRange.value=qrTextGap}
+ if(val)val.textContent=qrTextGap+" PX";
+}
+function updateTextSliderVisibility(){
+ const show=(mode==="qr"&&qrText);
+ const row=$("textSizeRow");if(row)row.style.display=show?"block":"none";
+ const rc=$("qrTextControls");if(rc)rc.style.display=show?"block":"none";
+ const sel=$("qrTextPosInline");if(sel)sel.value=qrTextPos;
+ paintGapSlider();
+}
 if(textRange){
  textRange.oninput=()=>{qrTextSize=+textRange.value;paintTextSlider();render();syncURL(false)};
  paintTextSlider();
 }
+if(gapRange)gapRange.oninput=()=>{qrTextGap=+gapRange.value;paintGapSlider();render();syncURL(false)};
+const qtpInline=$("qrTextPosInline");
+if(qtpInline)qtpInline.onchange=()=>{qrTextPos=qtpInline.value;render();syncURL(false)};
 /* copy payload */
 $("copyBtn").onclick=async()=>{
  const text=inputValue();
@@ -902,7 +1077,7 @@ function qrExportCanvas(){
  const cap=document.querySelector(".qr-caption");
  const capFs=cap?parseFloat(getComputedStyle(cap).fontSize):qrTextSize;
  const fs=Math.max(1,Math.round((capFs||qrTextSize)*s));
- const gap=Math.round(12*s);
+ const gap=Math.round(qrTextGap*s);
  const font="400 "+fs+"px \"PT Mono\",monospace";
  const mctx=document.createElement("canvas").getContext("2d");mctx.font=font;
  const tw=Math.ceil(mctx.measureText(text).width),th=Math.ceil(fs*1.3);
@@ -964,14 +1139,221 @@ async function enableBackground(){
 }
 function stopBackground(){if(vantaEffect){try{vantaEffect.destroy()}catch(e){}vantaEffect=null}}
 
-/* Theme: dark is the default. Remember the user's choice. */
+/* ---------- Batch: XLS/JSON/CSV of SNs -> QR PDF ---------- */
+const BATCH_PAGES={a4:[210,297],a5:[148,210],letter:[215.9,279.4]};
+const MM2PX=96/25.4;
+let batchItems=[],batchPageKey="a4",batchCache={};
+let batchQrMm=5,batchTextMm=2.5,batchTextGapMm=0.5,batchGapMm=0.5,batchTextPos="below",batchZoom=1;
+let batchCols=7,batchRows=35,batchPaperW=10,batchPaperH=15,batchSafeMm=6;
+let batchMT=6,batchMR=6,batchMB=6,batchML=6;
+function batchPageMM(){if(batchPageKey==="custom")return [Math.max(10,batchPaperW*10),Math.max(10,batchPaperH*10)];const p=BATCH_PAGES[batchPageKey]||BATCH_PAGES.a4;return [p[0],p[1]]}
+function batchLayout(){
+ const mm=batchPageMM(),pw=mm[0],ph=mm[1];
+ const usableW=Math.max(2,pw-batchML-batchMR),usableH=Math.max(2,ph-batchMT-batchMB);
+ const cellW=usableW/batchCols,cellH=usableH/batchRows;
+ const g=batchGapMm,tg=batchTextGapMm;
+ const cw=Math.max(1,cellW-2*g),ch=Math.max(1,cellH-2*g);
+ const textH=batchTextMm;
+ let base;
+ if(batchTextPos==="right"||batchTextPos==="left")base=Math.min(ch,Math.max(1,(cw-tg))*0.62);
+ else base=Math.min(cw,Math.max(0.5,ch-textH-tg));
+ base=Math.max(0.5,base);
+ const qr=Math.max(0.5,Math.min(base,Math.max(1,batchQrMm)));
+ return {pw:pw,ph:ph,mt:batchMT,mr:batchMR,mb:batchMB,ml:batchML,cellW:cellW,cellH:cellH,g:g,tg:tg,cw:cw,ch:ch,textH:textH,base:base,qr:qr};
+}
+function fitGridToQr(){
+ const mm=batchPageMM(),pw=mm[0],ph=mm[1];
+ const usableW=Math.max(2,pw-batchML-batchMR),usableH=Math.max(2,ph-batchMT-batchMB);
+ const g=batchGapMm,tg=batchTextGapMm,textH=batchTextMm,q=Math.max(1,batchQrMm);
+ let needW,needH;
+ if(batchTextPos==="right"||batchTextPos==="left"){needW=q/0.62+tg+2*g;needH=q+2*g}
+ else{needW=q+2*g;needH=q+textH+tg+2*g}
+ const maxCols=Math.max(1,Math.min(12,Math.floor(usableW/needW)||1));
+ const maxRows=Math.max(1,Math.min(60,Math.floor(usableH/needH)||1));
+ if(batchCols>maxCols)batchCols=maxCols;
+ if(batchRows>maxRows)batchRows=maxRows;
+}
+function qrDataUrl(text,px){
+ const key=text+"@"+px;
+ if(batchCache[key])return batchCache[key];
+ const d=document.createElement("div");
+ let url=null;
+ try{new QRCode(d,{text:text,width:px,height:px,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});const cv=d.querySelector("canvas");url=cv?cv.toDataURL("image/png"):null}catch(e){}
+ if(url)batchCache[key]=url;
+ return url;
+}
+async function ensureBatchLibs(){
+ if(!window.XLSX)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js");
+ if(!(window.jspdf&&window.jspdf.jsPDF)&&!window.jsPDF)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+}
+function jsPDFClass(){return (window.jspdf&&window.jspdf.jsPDF)||window.jsPDF}
+function extractItemsFromJson(data){
+ let arr=data;if(!Array.isArray(arr)&&arr&&typeof arr==="object")arr=[arr];
+ if(!Array.isArray(arr))return [];
+ return arr.map(function(o){
+   if(o==null)return "";
+   if(typeof o!=="object")return String(o);
+   const keys=["sn","SN","serial","code","value","data","id"];
+   for(const k of keys)if(o[k]!=null&&String(o[k]).trim()!=="")return String(o[k]).trim();
+   const v=Object.values(o).find(x=>x!=null&&String(x).trim()!=="");
+   return v!=null?String(v).trim():"";
+ }).filter(Boolean);
+}
+function extractItemsFromRows(rows){
+ const out=[];
+ const isHeader=v=>/^(sn|s\/n|serial|serial ?no|code|value|data|id|barcode)$/i.test(String(v).trim());
+ rows.forEach(function(row,i){
+   if(!row)return;
+   let v=row.find(c=>c!=null&&String(c).trim()!=="");
+   if(v==null)return;
+   v=String(v).trim();
+   if(i===0&&isHeader(v))return;
+   out.push(v);
+ });
+ return out;
+}
+function parseBatchFile(file){
+ const name=(file.name||"").toLowerCase();
+ const reader=new FileReader();
+ if(name.endsWith(".json")){
+   reader.onload=()=>{try{applyBatchItems(extractItemsFromJson(JSON.parse(reader.result)))}catch(e){setBatchStatus("Could not parse JSON.")}};
+   reader.readAsText(file);return;
+ }
+ ensureBatchLibs().then(()=>{
+   reader.onload=()=>{try{const wb=XLSX.read(new Uint8Array(reader.result),{type:"array"});const ws=wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false});applyBatchItems(extractItemsFromRows(rows))}catch(e){setBatchStatus("Could not read the file.")}};
+   reader.readAsArrayBuffer(file);
+ }).catch(()=>setBatchStatus("Could not load the spreadsheet library."));
+}
+function setBatchStatus(msg){const c=$("batchCount");if(c)c.textContent=msg}
+function applyBatchItems(items){batchItems=(items||[]).filter(Boolean);updateBatchInfo();renderBatchPreview()}
+function updateBatchInfo(){
+ const L=batchLayout(),per=batchCols*batchRows;
+ const pages=Math.max(1,Math.ceil(batchItems.length/per));
+ const m=$("batchMeasure");if(m)m.textContent="QR SIZE: "+(L.qr/10).toFixed(2)+" CM";
+ const qv=$("batchQrVal");if(qv)qv.textContent=(batchQrMm/10).toFixed(1)+" cm";
+ const tv=$("batchTextVal");if(tv)tv.textContent=batchTextMm.toFixed(1)+" mm";
+ const tgv=$("batchTextGapVal");if(tgv)tgv.textContent=batchTextGapMm.toFixed(1)+" mm";
+ const mv=$("batchMarginVal");if(mv)mv.textContent=batchGapMm.toFixed(1)+" mm";
+ const sv=$("batchSafeVal");if(sv)sv.textContent=batchSafeMm+" mm";
+ const cv=$("batchColsVal");if(cv)cv.textContent=batchCols;
+ const rv=$("batchRowsVal");if(rv)rv.textContent=batchRows;
+ const mtv=$("batchMTVal");if(mtv)mtv.textContent=batchMT+" mm";
+ const mrv=$("batchMRVal");if(mrv)mrv.textContent=batchMR+" mm";
+ const mbv=$("batchMBVal");if(mbv)mbv.textContent=batchMB+" mm";
+ const mlv=$("batchMLVal");if(mlv)mlv.textContent=batchML+" mm";
+ const zv=$("batchZoomVal");if(zv)zv.textContent=Math.round(batchZoom*100)+"%";
+ const c=$("batchCount");if(c)c.textContent=batchItems.length?(batchItems.length+" item"+(batchItems.length===1?"":"s")+" · "+pages+" page"+(pages===1?"":"s")+" · "+batchCols+"×"+batchRows+"/page"):"No file loaded";
+}
+function renderBatchPreview(){
+ const prev=$("batchPreview");if(!prev)return;
+ if(!batchItems.length){prev.innerHTML='<div class="batch-empty">Drag &amp; drop an XLS / JSON / CSV file to preview the QR sheet.</div>';return}
+ const L=batchLayout(),per=batchCols*batchRows,pages=Math.ceil(batchItems.length/per);
+ const sx=MM2PX*batchZoom;
+ const pageW=L.pw*sx,pageH=L.ph*sx,qrPx=Math.max(3,L.qr*sx),capPx=Math.max(3,L.textH*sx);
+ const pad=(L.mt*sx).toFixed(1)+'px '+(L.mr*sx).toFixed(1)+'px '+(L.mb*sx).toFixed(1)+'px '+(L.ml*sx).toFixed(1)+'px';
+ const cellPad=Math.max(0,L.g*sx);
+ let html="";
+ for(let p=0;p<pages;p++){
+   html+='<div class="batch-page" style="width:'+pageW.toFixed(1)+'px;height:'+pageH.toFixed(1)+'px;padding:'+pad+';grid-template-columns:repeat('+batchCols+',1fr);grid-template-rows:repeat('+batchRows+',1fr)">';
+   for(let r=0;r<batchRows;r++)for(let c=0;c<batchCols;c++){
+     const idx=p*per+r*batchCols+c;
+     if(idx>=batchItems.length){html+='<div class="batch-cell"></div>';continue}
+     const text=batchItems[idx],url=qrDataUrl(text,256);
+     html+='<div class="batch-cell pos-'+batchTextPos+'" style="padding:'+cellPad.toFixed(1)+'px;gap:'+(L.tg*sx).toFixed(1)+'px">'+(url?'<img src="'+url+'" width="'+qrPx.toFixed(1)+'" height="'+qrPx.toFixed(1)+'" alt="">':'')+'<div class="batch-cap" style="font-size:'+capPx.toFixed(1)+'px">'+esc(text)+'</div></div>';
+   }
+   html+='</div>';
+ }
+ prev.innerHTML=html;
+}
+function setProgress(p){const bar=$("batchProgress"),fill=$("batchProgressFill"),txt=$("batchProgressText");if(bar)bar.hidden=false;if(fill)fill.style.width=p+"%";if(txt)txt.textContent=Math.round(p)+"%"}
+function hideProgress(){const bar=$("batchProgress");if(bar)bar.hidden=true}
+async function downloadBatchPdf(){
+ if(!batchItems.length){setBatchStatus("Import a file first.");return}
+ setBatchStatus("Preparing…");setProgress(0);
+ try{await ensureBatchLibs()}catch(e){setBatchStatus("Could not load the PDF library.");hideProgress();return}
+ const JsPDF=jsPDFClass();
+ if(!JsPDF){setBatchStatus("PDF library did not load.");hideProgress();return}
+ try{
+  const per=batchCols*batchRows,total=batchItems.length,pages=Math.ceil(total/per);
+  const L=batchLayout();
+  const fmt=(batchPageKey==="custom")?[L.pw,L.ph]:batchPageKey;
+  const doc=new JsPDF({unit:"mm",format:fmt,orientation:"portrait"});
+  let done=0;
+  for(let p=0;p<pages;p++){
+    if(p>0)doc.addPage(fmt,"portrait");
+    for(let r=0;r<batchRows;r++)for(let c=0;c<batchCols;c++){
+      const idx=p*per+r*batchCols+c;if(idx>=total)continue;
+      const text=String(batchItems[idx]);
+      const x=L.ml+c*L.cellW+L.g,y=L.mt+r*L.cellH+L.g;
+      const cw=L.cw,ch=L.ch,qr=L.qr,th=L.textH,tg=L.tg,pos=batchTextPos;
+      let qx,qy,tx,ty,align="center",baseline="alphabetic";
+      if(pos==="above"){qx=x+(cw-qr)/2;qy=y+tg+th;tx=x+cw/2;ty=y+tg+th*0.8}
+      else if(pos==="right"){qx=x;qy=y+(ch-qr)/2;tx=x+qr+tg;ty=y+ch/2;align="left";baseline="middle"}
+      else if(pos==="left"){qx=x+cw-qr;qy=y+(ch-qr)/2;tx=x+cw-qr-tg;ty=y+ch/2;align="right";baseline="middle"}
+      else{qx=x+(cw-qr)/2;qy=y;tx=x+cw/2;ty=y+qr+tg+th*0.8}
+      const url=qrDataUrl(text,512);
+      if(url){try{doc.addImage(url,"PNG",qx,qy,qr,qr,undefined,"FAST")}catch(e){}}
+      doc.setFontSize(Math.max(1,th*2.835));
+      try{doc.text(text,tx,ty,{align:align,baseline:baseline,maxWidth:(pos==="right"||pos==="left")?(cw-qr-tg):cw})}catch(e){}
+      done++;
+      if(done%40===0){setProgress(done/total*100);await new Promise(r=>setTimeout(r,0))}
+    }
+  }
+  setProgress(100);
+  try{doc.save("qr-batch.pdf")}catch(e){const blob=doc.output("blob");downloadBlob(blob,"qr-batch.pdf")}
+  setBatchStatus("Saved qr-batch.pdf ("+total+" QR"+(total===1?"":"s")+", "+pages+" page"+(pages===1?"":"s")+")");
+ }catch(e){setBatchStatus("PDF error: "+(e&&e.message?e.message:"unknown"))}
+ setTimeout(hideProgress,900);
+}
+function updatePaperRow(){const r=$("batchPaperRow");if(r)r.style.display=(batchPageKey==="custom")?"flex":"none"}
+$("batchBtn").onclick=()=>{$("batchBackdrop").classList.add("open");ensureBatchLibs().catch(()=>{});updatePaperRow();batchReflow()};
+$("closeBatch").onclick=()=>$("batchBackdrop").classList.remove("open");
+$("batchBackdrop").onclick=e=>{if(e.target===$("batchBackdrop")){$("batchBackdrop").classList.remove("open");hideProgress()}};
+$("batchFile").onchange=e=>{const f=e.target.files&&e.target.files[0];if(f)parseBatchFile(f)};
+function batchReflow(){fitGridToQr();$("batchQr").value=batchQrMm;updateBatchInfo();renderBatchPreview()}
+function gridChanged(){const L=batchLayout();batchQrMm=Math.max(3,Math.min(30,Math.round(L.base)));$("batchQr").value=batchQrMm;updateBatchInfo();renderBatchPreview()}
+$("batchPage").onchange=()=>{batchPageKey=$("batchPage").value;updatePaperRow();batchReflow()};
+$("batchTextPos").onchange=()=>{batchTextPos=$("batchTextPos").value;batchReflow()};
+$("batchPaperW").oninput=()=>{batchPaperW=+$("batchPaperW").value||10;batchReflow()};
+$("batchPaperH").oninput=()=>{batchPaperH=+$("batchPaperH").value||15;batchReflow()};
+$("batchColsMinus").onclick=()=>{batchCols=Math.max(1,batchCols-1);gridChanged()};
+$("batchColsPlus").onclick=()=>{batchCols=Math.min(12,batchCols+1);gridChanged()};
+$("batchRowsMinus").onclick=()=>{batchRows=Math.max(1,batchRows-1);gridChanged()};
+$("batchRowsPlus").onclick=()=>{batchRows=Math.min(60,batchRows+1);gridChanged()};
+$("batchQr").oninput=()=>{batchQrMm=+$("batchQr").value;batchReflow()};
+$("batchText").oninput=()=>{batchTextMm=(+$("batchText").value)/10;batchReflow()};
+$("batchTextGap").oninput=()=>{batchTextGapMm=(+$("batchTextGap").value)/10;batchReflow()};
+$("batchMargin").oninput=()=>{batchGapMm=(+$("batchMargin").value)/10;batchReflow()};
+$("batchSafe").oninput=()=>{batchSafeMm=+$("batchSafe").value;batchMT=batchMR=batchMB=batchML=batchSafeMm;$("batchMT").value=$("batchMR").value=$("batchMB").value=$("batchML").value=batchSafeMm;batchReflow()};
+["batchMT","batchMR","batchMB","batchML"].forEach(function(id){const el=$(id);if(el)el.oninput=()=>{batchMT=+$("batchMT").value;batchMR=+$("batchMR").value;batchMB=+$("batchMB").value;batchML=+$("batchML").value;batchReflow()}});
+$("batchAdvToggle").onclick=()=>{const p=$("batchAdvPanel");p.hidden=!p.hidden;$("batchAdvToggle").textContent=(p.hidden?"ADVANCED ▾":"ADVANCED ▴")+" CUSTOM MARGINS"};
+$("batchPdf").onclick=downloadBatchPdf;
+$("batchClear").onclick=()=>{batchItems=[];batchCache={};$("batchFile").value="";updateBatchInfo();renderBatchPreview()};
+$("batchZoomIn").onclick=()=>{batchZoom=Math.min(4,+(batchZoom+0.2).toFixed(2));updateBatchInfo();renderBatchPreview()};
+$("batchZoomOut").onclick=()=>{batchZoom=Math.max(0.2,+(batchZoom-0.2).toFixed(2));updateBatchInfo();renderBatchPreview()};
+$("batchZoom100").onclick=()=>{batchZoom=1;updateBatchInfo();renderBatchPreview()};
+$("batchZoomFit").onclick=()=>{const prev=$("batchPreview"),L=batchLayout();const avail=Math.max(120,prev.clientWidth-48);batchZoom=Math.max(0.2,Math.min(4,avail/(L.pw*MM2PX)));updateBatchInfo();renderBatchPreview()};
+$("batchBrowse").onclick=e=>{e.stopPropagation();$("batchFile").click()};
+(function(){
+ const drop=$("batchDrop");if(!drop)return;
+ ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();drop.classList.add("over")}));
+ ["dragleave","dragend"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+ drop.addEventListener("drop",e=>{e.preventDefault();e.stopPropagation();drop.classList.remove("over");const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)parseBatchFile(f)});
+ drop.addEventListener("click",()=>$("batchFile").click());
+})();
+
+/* Theme: light is the default. Remember the user's choice. */
 const savedTheme=localStorage.getItem("barcodeStudioTheme");
-if(savedTheme==="light")document.body.classList.add("light");
+if(savedTheme!=="dark")document.body.classList.add("light");
 function updateThemeButton(){const light=document.body.classList.contains("light");$("themeIcon").textContent=light?"☾":"☀";$("themeLabel").textContent=light?"DARK":"LIGHT";$("themeSwitch").setAttribute("aria-label",light?"Switch to dark mode":"Switch to light mode")}
 $("themeSwitch").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("barcodeStudioTheme",document.body.classList.contains("light")?"light":"dark");updateThemeButton();render()};
 updateThemeButton();
 const savedFontSize=localStorage.getItem("barcodeStudioFontSize")||"17";
 document.documentElement.style.setProperty("--ui-scale",(savedFontSize/17).toFixed(4));
+edgeOn=localStorage.getItem("barcodeStudioEdge")!=="off";
+color1=localStorage.getItem("barcodeStudioColor1")||color1;
+color2=localStorage.getItem("barcodeStudioColor2")||color2;
+applyLookSettings();
 applyHash();
 bgEnabled=localStorage.getItem("barcodeStudioBg")!=="off";
 if(bgEnabled)enableBackground();

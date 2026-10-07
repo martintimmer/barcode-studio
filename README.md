@@ -8,7 +8,7 @@ A single-file, zero-install web app. Open `index.html`, type a payload, and get 
 
 🧩 **File:** `index.html` · 🖼️ **Icon:** `favicon.ico`
 🌐 **Runs:** any modern browser (desktop, iOS, iPadOS)
-🎨 **Theme:** dark by default, light available
+🎨 **Theme:** light by default, dark available
 
 ---
 
@@ -20,6 +20,7 @@ A single-file, zero-install web app. Open `index.html`, type a payload, and get 
 - 📄 **Payload filenames** — downloads are named after your data (e.g. `1002.png`)
 - 📋 **Copy** — one tap to copy the payload
 - 🔤 **QR caption** — show the payload as human-readable text beside the QR (left/right/top/bottom)
+- 📚 **Batch → PDF** — import an XLS / JSON / CSV of serial numbers and export a printable QR sheet
 - 🧭 **Input hints** — red notes show the exact length/characters allowed per format
 - 🔗 **Deep links** — encode format, data, size and options in the URL for shareable links
 - 📷 **Camera scanner** — reads all common barcodes and fills the payload
@@ -114,12 +115,34 @@ For QR the size maps to a fixed pixel size: **256 px at 50%**, **512 px at 100%*
 
 ### 🔤 QR caption (human-readable text)
 In the QR settings you can turn on **HUMAN-READABLE TEXT** to print the payload beside the QR code, and choose its **POSITION** — `RIGHT`, `LEFT`, `TOP`, or `BOTTOM`. The caption uses the **PT Mono** font and the same colour as the code, and it is included in the exported PNG/JPG.
-When enabled, a **`[ TEXT SIZE ]`** slider appears directly **above** the output-size slider (8–48 px) to scale the caption.
+When enabled, controls appear **under the QR preview**:
+- **`[ TEXT POSITION ]`** — pop the caption to `RIGHT / LEFT / TOP / BOTTOM`.
+- **`[ TEXT PADDING ]`** — the gap between the QR and the text (0–40 px).
+- **`[ TEXT SIZE ]`** — caption size (8–48 px).
+
+The same options are also in `SETTINGS +`, and all are included in the URL (`qrpos`, `qrpad`, `qrtsize`).
+
+### 📚 Batch (QR → PDF)
+In **QR** mode, below the sliders, a **`Batch generator`** button (same style as `SCAN CAMERA`) opens a **large popup** that only produces **QR** codes:
+
+1. **Import a file** — **drag & drop** (or click to browse) an XLS/XLSX, JSON, CSV or TSV. The first column is used (a header like `SN` / `Serial` / `Code` is ignored); JSON accepts strings or objects (`sn`/`serial`/`code`/`value`).
+2. **Page size** — **A4** (21.0 × 29.7 cm), **A5** (14.8 × 21.0 cm), **Letter** (21.6 × 27.9 cm) or **CUSTOM** (type any paper W × H in cm).
+3. **Text orientation** — where the readable text sits: `BELOW`, `ABOVE`, `RIGHT` or `LEFT`.
+4. **Columns / Rows steppers** — `−` / `+` to change the grid up to **7 × 35** per page (extra items flow onto more pages automatically).
+5. **Sliders** — **QR SIZE** (the printed QR size, **0.3–3.0 cm**), **TEXT SIZE** (caption mm), **GAP** (space between labels) and **SAFE MARGIN** (print-safe page border). Setting the QR size automatically shrinks the grid so it fits (e.g. 3 cm → 6 × 8 on A4).
+6. **Advanced** — expand **CUSTOM MARGINS** to set independent **Top / Right / Bottom / Left** margins.
+7. **Preview** — auto-generates the sheet on a print-like background. Zoom with **−/+**, **FIT**, or **100 %** (100 % = true physical size, so an A4 page shows at its real printed scale).
+8. **`QR SIZE: … CM`** shows how big each QR prints (e.g. `0.46 CM`), updating live.
+9. **`DOWNLOAD PDF`** writes `qr-batch.pdf` while a **progress bar** fills the status area. The PDF matches the preview exactly (page, grid, orientation, sizes and margins).
+
+> A ready-made test file lives at `sample-sns-150.csv` (now **300** codes in the `HQ00#####` template).
 
 ### ⚙️ Settings
 Open with the **`SETTINGS +`** button in the top bar. Options adapt to the current format:
 
 - 🔠 **Font size** — UI scale (15–21 px, default **17 px / Standard**, scales the whole workspace)
+- 🖼️ **Colored edge** — toggle the coloured frame around the page
+- 🎨 **Distinct colors** — pick predefined **Color 1** (selected buttons + sliders) and **Color 2** (borders + hover); both persist
 - ✅ **MOD-43 checksum** — Code 39 only
 - 👁️ **Human-readable text** — show the value under 1D barcodes
 
