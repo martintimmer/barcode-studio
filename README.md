@@ -202,13 +202,19 @@ Your data never leaves the device. Codes are generated and scanned entirely in t
 
 ---
 
+## 📄 License
+
+Barcode Studio © 2026 Martin Timmer — **MIT licensed** (see `LICENSE`). It loads third-party libraries and fonts (QRCode.js, ZXing, bwip-js, three.js, Vanta, SheetJS, jsPDF, JetBrains Mono, PT Mono) that retain their own licenses — see `THIRD_PARTY_LICENSES.md`.
+
+---
+
 ## 📦 Repo / Publishing
 
-Files: `index.html`, `favicon.ico`, `README.md`.
+Files: `index.html`, `favicon.ico`, `README.md`, `LICENSE`, `THIRD_PARTY_LICENSES.md`.
 
 ```powershell
 cd "C:\Users\7000027237\Downloads\barcode-studio"
-git init; git add index.html favicon.ico README.md; git commit -m "Barcode Studio v1.0.0"; git branch -M main
+git init; git add index.html favicon.ico README.md LICENSE THIRD_PARTY_LICENSES.md; git commit -m "Barcode Studio v1.0.0"; git branch -M main
 gh repo create barcode-studio --public --source=. --remote=origin --push
 git tag -a v1.0.0 -m "Barcode Studio v1.0.0"; git push origin v1.0.0
 gh release create v1.0.0 --title "Barcode Studio v1.0.0" --generate-notes index.html
