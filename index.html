@@ -191,19 +191,19 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
   display:none;flex-direction:column;overflow:hidden
 }
 .save-menu.open .save-options{display:flex}
-.save-options button{
+.save-options button,.save-options a{
   min-height:40px;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);
-  text-align:left;padding:9px 14px;font:10px "Courier New",monospace;letter-spacing:1.4px;cursor:pointer
+  text-align:left;padding:9px 14px;font:10px "Courier New",monospace;letter-spacing:1.4px;cursor:pointer;text-decoration:none;display:block
 }
-.save-options button:last-child{border-bottom:0}
-.save-options button:hover:not(:disabled){background:var(--buttonHover);color:#fff}
-.save-options button:disabled{opacity:.35;cursor:not-allowed}
+.save-options button:hover:not(:disabled),.save-options a:hover{background:var(--buttonHover);color:#fff}
+.save-options button:disabled,.save-options a.disabled,.dpi-opts a.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
 .dpi-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--card)}
 .dpi-item:last-child{border-bottom:0}
 .dpi-label{font:10px "Courier New",monospace;letter-spacing:1.2px;color:var(--ink);white-space:nowrap}
 .dpi-opts{display:flex;gap:6px}
-.dpi-opts button{min-height:30px;min-width:48px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:10px "Courier New",monospace;cursor:pointer}
-.dpi-opts button:hover{background:var(--buttonHover);color:#fff}
+.dpi-opts button,.dpi-opts a{min-height:30px;min-width:48px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:10px "Courier New",monospace;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;padding:0 8px}
+.dpi-opts button:hover,.dpi-opts a:hover{background:var(--buttonHover);color:#fff}
+.save-hint{font:9px/1.45 "Courier New",monospace;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line)}
 .action{
   min-height:44px;border:1px solid var(--ink);background:var(--ink);color:white;padding:10px 14px;
   cursor:pointer;font:10px "Courier New",monospace;letter-spacing:1px
@@ -227,9 +227,9 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
 .barcode-box svg{width:100%;height:auto;display:block}
 .qr-box{
   width:min(320px,82vw);aspect-ratio:1;background:var(--white);border:1px solid var(--line);
-  display:flex;align-items:center;justify-content:center;padding:12px
+  display:flex;align-items:center;justify-content:center;padding:12px;min-width:0;line-height:0
 }
-.qr-box canvas,.qr-box img{width:100%!important;height:100%!important;image-rendering:pixelated}
+.qr-box canvas,.qr-box img{display:block;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;aspect-ratio:1;object-fit:contain;image-rendering:pixelated}
 .qr-figure{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-width:0;margin:0}
 .qr-figure.pos-top,.qr-figure.pos-bottom{flex-direction:column}
 .qr-figure .qr-box{flex:0 1 auto;max-width:100%}
@@ -359,7 +359,10 @@ body:not(.light) .setting select{
   background:#111a20;color:#f3f7f9;border-color:#344650
 }
 body:not(.light) .save-options,
-body:not(.light) .save-options button{
+body:not(.light) .save-options button,
+body:not(.light) .save-options a,
+body:not(.light) .dpi-item,
+body:not(.light) .dpi-opts a{
   background:#111a20;color:#f3f7f9;border-color:#344650
 }
 /* Light mode: keep control fills bright; dark fills are reserved for dark mode. */
@@ -422,8 +425,8 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 .size-range::-webkit-slider-thumb{background:var(--accent1)!important;border-color:var(--accent1)!important}
 .size-range::-moz-range-thumb{background:var(--accent1)!important;border-color:var(--accent1)!important}
 .size-value,.batch-measure,.batch-slider-head b{color:var(--accent1)!important}
-.scan-button,.theme-switch,.action,.more-btn,.switch,.switch button,.dpi-opts button,.batch-zoom button,.batch-browse,.batch-field select,.setting select,.save-options,.batch-btn{border-color:var(--accent2)!important}
-.action:hover,.action.secondary:hover,.bottom-action:hover,.close:hover,.theme-switch:hover,.scan-button:hover,.switch button:hover:not(.active),.more-options button:hover,.dpi-opts button:hover,.batch-zoom button:hover,.batch-browse:hover{background:var(--accent2)!important;color:#fff!important}
+.scan-button,.theme-switch,.action,.more-btn,.switch,.switch button,.dpi-opts button,.dpi-opts a,.save-options a,.batch-zoom button,.batch-browse,.batch-field select,.setting select,.save-options,.batch-btn{border-color:var(--accent2)!important}
+.action:hover,.action.secondary:hover,.bottom-action:hover,.close:hover,.theme-switch:hover,.scan-button:hover,.switch button:hover:not(.active),.more-options button:hover,.dpi-opts button:hover,.dpi-opts a:hover,.save-options a:hover,.batch-zoom button:hover,.batch-browse:hover{background:var(--accent2)!important;color:#fff!important}
 body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
 </style>
 </head>
@@ -490,9 +493,10 @@ body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
           <div class="save-menu" id="saveMenu">
             <button class="action secondary" id="saveBtn" aria-haspopup="true" aria-expanded="false">SAVE ▾</button>
             <div class="save-options" id="saveOptions" role="menu">
-              <button type="button" role="menuitem" data-format="svg">SVG</button>
-              <div class="dpi-item"><span class="dpi-label">PNG · DPI</span><span class="dpi-opts"><button type="button" data-format="png" data-dpi="72" title="72 DPI">72</button><button type="button" data-format="png" data-dpi="300" title="300 DPI">300</button></span></div>
-              <div class="dpi-item"><span class="dpi-label">JPG · DPI</span><span class="dpi-opts"><button type="button" data-format="jpg" data-dpi="72" title="72 DPI">72</button><button type="button" data-format="jpg" data-dpi="300" title="300 DPI">300</button></span></div>
+              <a class="save-link" role="menuitem" data-format="svg" href="#">SVG</a>
+              <div class="dpi-item"><span class="dpi-label">PNG · DPI</span><span class="dpi-opts"><a data-format="png" data-dpi="72" href="#">72</a><a data-format="png" data-dpi="300" href="#">300</a></span></div>
+              <div class="dpi-item"><span class="dpi-label">JPG · DPI</span><span class="dpi-opts"><a data-format="jpg" data-dpi="72" href="#">72</a><a data-format="jpg" data-dpi="300" href="#">300</a></span></div>
+              <div class="save-hint">Hover / long-press a size to copy its link — opening the link auto-downloads.</div>
             </div>
           </div>
         </div>
@@ -751,7 +755,7 @@ function showSVG(svg,name){
  lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
 }
 function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
-function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";updateSaveLinks();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
 
 /* settings */
 function settingsMarkup(){
@@ -809,12 +813,15 @@ const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix
 const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR",ean13:"EAN-13",upca:"UPC-A"};
 function openCameraPanel(){$("cameraPanel").classList.add("open");document.body.classList.add("scanning")}
 function closeCameraPanel(){$("cameraPanel").classList.remove("open");document.body.classList.remove("scanning")}
+let scanLocked=false;
 async function startCamera(){
  if(scannerRunning)return;
  openCameraPanel();
  if(!window.isSecureContext){$("cameraStatus").textContent="Camera needs a secure page. Open this file over https:// or localhost on iOS/Android.";return}
  if(!navigator.mediaDevices?.getUserMedia){$("cameraStatus").textContent="Camera access is not available in this browser.";return}
  if(typeof ZXingBrowser==="undefined"){ $("cameraStatus").textContent="Scanner library could not load. Check the internet connection once.";return}
+ try{releaseCamera()}catch(e){}
+ scanLocked=false;
  $("cameraStatus").textContent="Requesting camera permission…";
  try{
    const BF=ZXingBrowser.BarcodeFormat;
@@ -832,6 +839,8 @@ async function startCamera(){
      $("cameraVideo"),
      (result,error)=>{
        if(result){
+         if(scanLocked)return;
+         scanLocked=true;
          const value=result.getText();
          $("data").value=value;
          $("data").scrollTop=0;
@@ -843,7 +852,7 @@ async function startCamera(){
          const label=m?modeLabels[m]:(fmt?fmt.replace(/_/g," ").toUpperCase():"code");
          $("cameraStatus").textContent="Scanned "+label+(m?"":" (read-only)")+" — payload loaded.";
          setStatus("Scanned "+label+(m?"":" (read-only — use COPY)")+" — payload loaded.");
-       } else if(scannerRunning){
+       } else if(scannerRunning&&!scanLocked){
          $("cameraStatus").textContent="Scanning… try to fill the frame with the barcode";
        }
      }
@@ -853,11 +862,13 @@ async function startCamera(){
    $("cameraStatus").textContent="Camera could not start. On iPhone/iPad, open this page over HTTPS or localhost and allow camera access.";
  }
 }
-function stopCamera(){
+function releaseCamera(){
  try{if(scanner)scanner.reset()}catch(e){}
- const v=$("cameraVideo");if(v.srcObject){v.srcObject.getTracks().forEach(t=>t.stop());v.srcObject=null}
- scannerRunning=false;
+ scanner=null;
+ const v=$("cameraVideo");
+ if(v&&v.srcObject){try{v.srcObject.getTracks().forEach(t=>t.stop())}catch(e){}try{v.srcObject=null}catch(e){}}
 }
+function stopCamera(){releaseCamera();scannerRunning=false}
 $("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){closeCameraPanel();stopCamera()}else{startCamera()}};
 $("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();closeCameraPanel();$("cameraStatus").textContent="Camera stopped.";};
 
@@ -920,7 +931,7 @@ function setMode(m,fromHash){
  $("title").textContent=titles[m]||"";
  $("modalBackdrop").classList.remove("open");
  $("data").setAttribute("autocapitalize",m==="39"?"characters":"none");
- document.querySelector('#saveOptions button[data-format="svg"]').disabled=m==="qr";
+ const svgLink=document.querySelector('#saveOptions [data-format="svg"]');if(svgLink)svgLink.classList.toggle("disabled",m==="qr");
  updateMoreLabel();
  render();
  if(!fromHash)syncURL(true);
@@ -937,6 +948,8 @@ document.addEventListener("click",e=>{if(!$("modeMore").contains(e.target))toggl
 window.addEventListener("popstate",applyHash);
 window.addEventListener("hashchange",applyHash);
 $("data").addEventListener("input",()=>{render();syncURL(false)});
+$("data").addEventListener("paste",()=>setTimeout(()=>{render();syncURL(false)},0));
+$("data").addEventListener("change",()=>{render();syncURL(false)});
 
 /* output size slider */
 const sizeRange=$("codeSizeRange");
@@ -990,9 +1003,19 @@ function payloadFileName(){
  if(name.length>80)name=name.slice(0,80).trim();
  return name||"barcode";
 }
-function toggleSaveMenu(open){const menu=$("saveMenu");menu.classList.toggle("open",open);$("saveBtn").setAttribute("aria-expanded",menu.classList.contains("open")?"true":"false")}
+function toggleSaveMenu(open){const menu=$("saveMenu");menu.classList.toggle("open",open);$("saveBtn").setAttribute("aria-expanded",menu.classList.contains("open")?"true":"false");if(open)updateSaveLinks()}
+function buildShareURL(format,dpi){let h=buildHash();if(format)h+="&format="+format;if(dpi)h+="&dpi="+dpi;return location.href.split("#")[0]+"#"+h}
+function updateSaveLinks(){document.querySelectorAll("#saveOptions [data-format]").forEach(a=>{const f=a.dataset.format,d=a.dataset.dpi?+a.dataset.dpi:undefined;const u=buildShareURL(f,d);a.setAttribute("href",u);a.setAttribute("title",u)})}
 $("saveBtn").onclick=e=>{e.stopPropagation();toggleSaveMenu(!$("saveMenu").classList.contains("open"))};
-document.querySelectorAll("#saveOptions [data-format]").forEach(b=>b.onclick=()=>{toggleSaveMenu(false);saveAs(b.dataset.format,b.dataset.dpi?+b.dataset.dpi:undefined)});
+document.querySelectorAll("#saveOptions [data-format]").forEach(a=>a.onclick=e=>{
+ e.preventDefault();
+ if(a.classList.contains("disabled"))return;
+ const f=a.dataset.format,d=a.dataset.dpi?+a.dataset.dpi:undefined;
+ toggleSaveMenu(false);
+ const target=buildShareURL(f,d);
+ const th="#"+target.split("#")[1];
+ if(location.hash===th){saveAs(f,d)}else{try{history.pushState(null,"",th);applyHash()}catch(err){location.hash=th.slice(1)}}
+});
 document.addEventListener("click",e=>{if(!$("saveMenu").contains(e.target))toggleSaveMenu(false)});
 function dpiScale(){return exportDpi/72}
 function targetSize(el,source){

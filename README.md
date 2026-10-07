@@ -103,6 +103,8 @@ Click **`SAVE ▾`** and pick a format. **PNG** and **JPG** each have a **72 / 3
 
 **300 DPI** scales the pixel resolution (×300/72) and embeds the DPI in the file's metadata (PNG `pHYs`, JPEG JFIF) so it is print-ready.
 
+Each option is a **real link** that encodes the current settings (`…/#QR?=HQ0012564&format=png&dpi=300`): **hover / long-press to see & copy the link**, and opening it auto-downloads the image. Clicking an option sets that URL and downloads.
+
 Files are named after your **payload**, e.g. `1002.svg`, `1002.png`, `1002.jpg`. Characters that aren't allowed in filenames are replaced with `_`.
 
 ### 📋 Copying the payload
