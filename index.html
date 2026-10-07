@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#070b0f">
@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
 
 <!--
   Barcode Studio
@@ -31,7 +31,7 @@
   --input:#05080b;--white:#ffffff;--button:#17222a;--buttonHover:#253741;
   --btnText:#f3f7f9;
   --payloadBg:#05080b;--payloadInk:#f3f7f9;--shadow:0 3px 0 rgba(0,0,0,.45);
-  --ui-font-size:15px;--ui-scale:1;--danger:#ff8a73;
+  --ui-font-size:17px;--ui-scale:1;--danger:#ff8a73;
 }
 body.light{
   --paper:#f7f5f0;--ink:#092d4d;--muted:#6d7d87;--line:#dfe3df;--card:#fffefa;
@@ -82,8 +82,6 @@ header,main,.footer{max-width:1100px;margin-left:auto;margin-right:auto;position
 header{margin-bottom:24px}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}.scan-button{min-height:42px;padding:7px 12px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:9px "Courier New",monospace;letter-spacing:1.2px;cursor:pointer;box-shadow:var(--shadow)}.scan-button:hover{background:var(--buttonHover);color:#fff}.theme-switch{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 11px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:9px "Courier New",monospace;letter-spacing:1.2px;cursor:pointer;box-shadow:var(--shadow)}.theme-switch span:first-child{font-size:16px;line-height:1}.brand{font-size:36px;font-weight:800;letter-spacing:-1.5px;margin:0 0 10px}
 .kicker{font:10px "Courier New",monospace;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted)}
-.site-url{display:inline-block;margin:2px 0 0;font:10px "Courier New",monospace;letter-spacing:.6px;color:var(--blue2);text-decoration:none;word-break:break-all}
-.site-url:hover{text-decoration:underline}
 .rule{height:1px;background:var(--line);margin-top:14px}
 .toolbar{
   display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:16px
@@ -99,6 +97,15 @@ h2{margin:5px 0 0;font-size:23px;letter-spacing:-.5px}
 }
 .switch button:last-child{border-right:0}
 .switch button.active{background:var(--ink);color:white}
+.mode-tabs{display:flex;align-items:stretch;gap:8px;max-width:100%}
+.mode-more{display:none;position:relative}
+.more-btn{min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;white-space:nowrap;font:10px "Courier New",monospace;letter-spacing:1.1px;cursor:pointer}
+.more-options{position:absolute;top:calc(100% + 6px);right:0;z-index:25;min-width:164px;background:var(--card);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.28);display:none;flex-direction:column;overflow:hidden}
+.mode-more.open .more-options{display:flex}
+.more-options button{min-height:40px;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);text-align:left;padding:9px 14px;font:10px "Courier New",monospace;letter-spacing:1.4px;cursor:pointer}
+.more-options button:last-child{border-bottom:0}
+.more-options button:hover{background:var(--buttonHover);color:#fff}
+.more-options button.active{background:var(--ink);color:var(--paper)}
 
 .editor{margin-bottom:14px}
 .workbench{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}
@@ -108,6 +115,7 @@ h2{margin:5px 0 0;font-size:23px;letter-spacing:-.5px}
 .size-bar{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:12px 14px}
 .size-bar-head{display:flex;justify-content:space-between;align-items:center;font:10px "Courier New",monospace;letter-spacing:1.6px}
 .size-bar .size-range{margin-top:12px}
+.size-row+.size-row{margin-top:16px}
 .panel{
   background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:15px
 }
@@ -129,7 +137,7 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .save-menu{position:relative;display:inline-block}
 .save-options{
-  position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:132px;
+  position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:196px;
   background:var(--card);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.28);
   display:none;flex-direction:column;overflow:hidden
 }
@@ -141,6 +149,12 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
 .save-options button:last-child{border-bottom:0}
 .save-options button:hover:not(:disabled){background:var(--buttonHover);color:#fff}
 .save-options button:disabled{opacity:.35;cursor:not-allowed}
+.dpi-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--card)}
+.dpi-item:last-child{border-bottom:0}
+.dpi-label{font:10px "Courier New",monospace;letter-spacing:1.2px;color:var(--ink);white-space:nowrap}
+.dpi-opts{display:flex;gap:6px}
+.dpi-opts button{min-height:30px;min-width:48px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:10px "Courier New",monospace;cursor:pointer}
+.dpi-opts button:hover{background:var(--buttonHover);color:#fff}
 .action{
   min-height:44px;border:1px solid var(--ink);background:var(--ink);color:white;padding:10px 14px;
   cursor:pointer;font:10px "Courier New",monospace;letter-spacing:1px
@@ -167,6 +181,12 @@ textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114
   display:flex;align-items:center;justify-content:center;padding:12px
 }
 .qr-box canvas,.qr-box img{width:100%!important;height:100%!important;image-rendering:pixelated}
+.qr-figure{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-width:0;margin:0}
+.qr-figure.pos-top,.qr-figure.pos-bottom{flex-direction:column}
+.qr-figure .qr-box{flex:0 1 auto;max-width:100%}
+.qr-figure.pos-left .qr-box,.qr-figure.pos-top .qr-box{order:2}
+.qr-figure.pos-left .qr-caption,.qr-figure.pos-top .qr-caption{order:1}
+.qr-caption{flex:0 1 auto;min-width:0;max-width:55%;font-family:"PT Mono",monospace;font-weight:400;line-height:1.3;letter-spacing:.5px;word-break:break-all;text-align:center}
 .quote{font-size:14px;line-height:1.45;margin:0;color:var(--ink)}
 .meta{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:9px;font:8px "Courier New",monospace;letter-spacing:.7px}
 .caption{margin-top:10px;font:10px "Courier New",monospace;letter-spacing:2px;color:var(--blue2);font-weight:bold}
@@ -272,6 +292,10 @@ body:not(.light) .switch button{
 body:not(.light) .switch button.active{
   background:#f3f7f9;color:#070b0f;border-color:#f3f7f9
 }
+body:not(.light) .more-btn{background:#111a20;color:#dce7ec;border-color:#2b3942}
+body:not(.light) .more-options,
+body:not(.light) .more-options button{background:#111a20;color:#dce7ec;border-color:#2b3942}
+body:not(.light) .more-options button.active{background:#f3f7f9;color:#070b0f}
 body:not(.light) .theme-switch,
 body:not(.light) .scan-button{
   background:#111a20;color:#f3f7f9;border-color:#344650
@@ -323,7 +347,7 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 
 @media(max-width:700px){
   body{padding:0}.shell{min-height:100svh;border:0;padding-top:calc(15px + env(safe-area-inset-top))}
-  html,body{background:var(--paper)!important}
+  html,body{background:var(--paper)!important;min-width:0}
   .brand{font-size:26px;letter-spacing:-1px}
   .topbar{flex-direction:column;align-items:stretch;gap:12px}
   .top-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;margin-left:0}
@@ -331,7 +355,10 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
   .kicker{letter-spacing:1.4px;margin-top:18px}
   .rule{margin-top:18px}
   .toolbar{align-items:stretch;flex-direction:column}
-  .switch{width:100%}.switch button{flex:1}
+  .mode-tabs{width:100%}
+  .switch{flex:1;min-width:0;width:auto}.switch button{flex:1}
+  .switch .tab-extra{display:none}
+  .mode-more{display:block}
   .preview-card{min-height:320px}
   .workbench{grid-template-columns:1fr}
   .workbench .editor{margin-bottom:14px}
@@ -347,7 +374,6 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 
 <header>
   <div class="topbar"><div class="brand">Barcode Studio</div><div class="top-actions"><button class="scan-button" id="cameraButton">SCAN CAMERA</button><button class="scan-button" id="settingsBtn">SETTINGS +</button><button class="theme-switch" id="themeSwitch" aria-label="Toggle dark mode"><span id="themeIcon">☀</span><span id="themeLabel">LIGHT</span></button></div></div>
-  <a class="site-url" href="https://martintimmer.github.io/barcode-studio/" target="_blank" rel="noopener">https://martintimmer.github.io/barcode-studio/</a>
   <div class="kicker">Generate, Save, Read CODE 39 / ITF / CODE 128 / DATA MATRIX / EAN-13 / UPC-A / QR codes</div>
   <div class="rule"></div>
 </header>
@@ -355,16 +381,26 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 <main>
   <section class="toolbar">
     <div>
-      <h2 id="title">Code 39 generator.</h2>
+      <h2 id="title">Code 39 generator</h2>
     </div>
-    <div class="switch">
-      <button data-mode="39" class="active">CODE 39</button>
-      <button data-mode="itf">ITF</button>
-      <button data-mode="128">CODE 128</button>
-      <button data-mode="dm">DATA MATRIX</button>
-      <button data-mode="ean13">EAN-13</button>
-      <button data-mode="upca">UPC-A</button>
-      <button data-mode="qr">QR</button>
+    <div class="mode-tabs">
+      <div class="switch">
+        <button data-mode="qr">QR</button>
+        <button data-mode="dm">DATA MATRIX</button>
+        <button data-mode="39" class="active">CODE 39</button>
+        <button data-mode="itf">ITF</button>
+        <button data-mode="128" class="tab-extra">CODE 128</button>
+        <button data-mode="ean13" class="tab-extra">EAN-13</button>
+        <button data-mode="upca" class="tab-extra">UPC-A</button>
+      </div>
+      <div class="mode-more" id="modeMore">
+        <button type="button" class="more-btn" id="moreBtn" aria-haspopup="true" aria-expanded="false">MORE ▾</button>
+        <div class="more-options" id="moreOptions" role="menu">
+          <button type="button" data-mode="128">CODE 128</button>
+          <button type="button" data-mode="ean13">EAN-13</button>
+          <button type="button" data-mode="upca">UPC-A</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -395,8 +431,8 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
             <button class="action secondary" id="saveBtn" aria-haspopup="true" aria-expanded="false">SAVE ▾</button>
             <div class="save-options" id="saveOptions" role="menu">
               <button type="button" role="menuitem" data-format="svg">SVG</button>
-              <button type="button" role="menuitem" data-format="jpg">JPG</button>
-              <button type="button" role="menuitem" data-format="png">PNG</button>
+              <div class="dpi-item"><span class="dpi-label">PNG · DPI</span><span class="dpi-opts"><button type="button" data-format="png" data-dpi="72" title="72 DPI">72</button><button type="button" data-format="png" data-dpi="300" title="300 DPI">300</button></span></div>
+              <div class="dpi-item"><span class="dpi-label">JPG · DPI</span><span class="dpi-opts"><button type="button" data-format="jpg" data-dpi="72" title="72 DPI">72</button><button type="button" data-format="jpg" data-dpi="300" title="300 DPI">300</button></span></div>
             </div>
           </div>
         </div>
@@ -407,8 +443,14 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
     <div class="output-col">
       <section id="previewArea"></section>
       <section class="size-bar" id="sizeBar">
-        <div class="size-bar-head"><span>[ OUTPUT SIZE ]</span><span class="size-value" id="codeSizeValue">50%</span></div>
-        <input type="range" class="size-range" id="codeSizeRange" min="25" max="100" step="5" value="50" aria-label="Output size">
+        <div class="size-row" id="textSizeRow" style="display:none">
+          <div class="size-bar-head"><span>[ TEXT SIZE ]</span><span class="size-value" id="textSizeValue">16 PX</span></div>
+          <input type="range" class="size-range" id="textSizeRange" min="8" max="48" step="1" value="16" aria-label="Text size">
+        </div>
+        <div class="size-row">
+          <div class="size-bar-head"><span>[ OUTPUT SIZE ]</span><span class="size-value" id="codeSizeValue">50%</span></div>
+          <input type="range" class="size-range" id="codeSizeRange" min="10" max="100" step="5" value="50" aria-label="Output size">
+        </div>
       </section>
     </div>
   </div>
@@ -427,7 +469,7 @@ textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
 <script>
 const NS="http://www.w3.org/2000/svg";
 const $=id=>document.getElementById(id);
-let mode="39",lastSVG="",qrSize=512,dmSize=8,codeSize=50,scanner=null,scannerRunning=false;
+let mode="39",lastSVG="",qrSize=512,dmSize=8,codeSize=50,qrText=false,qrTextPos="right",qrTextSize=16,exportDpi=72,scanner=null,scannerRunning=false;
 let barColor="#092d4d",bgColor="#ffffff";
 const settings={c39Check:false,c39Text:true,itfText:true,c128Text:true};
 
@@ -440,7 +482,17 @@ const INPUT_HINTS={
  ean13:"NOTE: EAN-13 accepts digits 0-9 only. Enter 12 or 13 digits; with 12 digits the check digit is added automatically.",
  upca:"NOTE: UPC-A accepts digits 0-9 only. Enter 11 or 12 digits; with 11 digits the check digit is added automatically."
 };
-function updateHint(){const h=$("hint");if(!h)return;const t=INPUT_HINTS[mode]||"";h.textContent=t;h.style.display=t?"block":"none";}
+function updateHint(){
+ const h=$("hint");if(!h)return;
+ const raw=($("data").value||"").replace(/\s/g,"");
+ let note="";
+ if(raw){
+   if(mode==="itf"){if(!/^\d+$/.test(raw)||raw.length%2!==0)note=INPUT_HINTS.itf}
+   else if(mode==="ean13"){if(!/^\d+$/.test(raw)||(raw.length!==12&&raw.length!==13))note=INPUT_HINTS.ean13}
+   else if(mode==="upca"){if(!/^\d+$/.test(raw)||(raw.length!==11&&raw.length!==12))note=INPUT_HINTS.upca}
+ }
+ h.textContent=note;h.style.display=note?"block":"none";
+}
 function setStatus(msg,error=false){$("status").textContent=msg||"";$("status").className="status"+(error?" error":"");}
 function svgStart(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="${bgColor}"/>`;}
 function downloadText(text,name,type){const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),500);}
@@ -515,10 +567,12 @@ function renderUPCA(){renderBwip1D("upca","UPC-A")}
 function renderQR(){
  const text=inputValue();
  const qrPx=Math.max(64,Math.round(512*codeSize/100));
+ const boxHtml=`<div class="qr-box" id="qrBox" style="width:min(${qrPx}px,100%)"></div>`;
+ const figHtml=qrText?`<figure class="qr-figure pos-${qrTextPos}">${boxHtml}<figcaption class="qr-caption" style="font-size:${qrTextSize}px;color:${barColor}">${esc(text)}</figcaption></figure>`:boxHtml;
  $("previewArea").innerHTML=`<article class="preview-card">
   <div class="card-head"><span>QR</span><span>[ LIVE ]</span></div>
   <div class="card-title">[ QR CODE PREVIEW ]</div>
-  <div class="preview"><div class="qr-box" id="qrBox" style="width:min(${qrPx}px,100%)"></div></div>
+  <div class="preview">${figHtml}</div>
   <div class="meta"><span>QR / LOCAL</span><span>${qrPx} PX</span></div>
  </article>`;
  const box=$("qrBox");
@@ -544,7 +598,7 @@ function showSVG(svg,name){
  lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
 }
 function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
-function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
 
 /* settings */
 function settingsMarkup(){
@@ -552,19 +606,22 @@ function settingsMarkup(){
    <div class="setting">
      <span>FONT SIZE</span>
      <select id="fontSizeSetting">
-       <option value="13">13 PX — COMPACT</option>
-       <option value="15" selected>15 PX — STANDARD</option>
-       <option value="17">17 PX — LARGE</option>
-       <option value="19">19 PX — EXTRA LARGE</option>
+       <option value="15">15 PX — COMPACT</option>
+       <option value="17" selected>17 PX — STANDARD</option>
+       <option value="19">19 PX — LARGE</option>
+       <option value="21">21 PX — EXTRA LARGE</option>
      </select>
    </div>`;
+ const bgSetting = `<div class="setting"><span>ANIMATED BACKGROUND</span><input id="bgToggle" type="checkbox" ${bgEnabled?"checked":""}></div>`;
 
- if(mode==="39")return fontSetting + `<div class="setting"><span>MOD-43 CHECKSUM</span><input id="s1" type="checkbox" ${settings.c39Check?"checked":""}></div><div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s2" type="checkbox" ${settings.c39Text?"checked":""}></div>`;
- if(mode==="itf")return fontSetting + `<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.itfText?"checked":""}></div>`;
- if(mode==="128")return fontSetting + `<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.c128Text?"checked":""}></div>`;
- if(mode==="dm")return fontSetting + `<div class="setting"><span>FORMAT</span><span>ECC 200 / SQUARE</span></div>`;
- if(mode==="ean13"||mode==="upca")return fontSetting + `<div class="setting"><span>FORMAT</span><span>RETAIL / EAN-UPC</span></div>`;
- return fontSetting + `<div class="setting"><span>GENERATION</span><span>LOCAL / IN PAGE</span></div>`;
+ let body;
+ if(mode==="39")body=`<div class="setting"><span>MOD-43 CHECKSUM</span><input id="s1" type="checkbox" ${settings.c39Check?"checked":""}></div><div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s2" type="checkbox" ${settings.c39Text?"checked":""}></div>`;
+ else if(mode==="itf")body=`<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.itfText?"checked":""}></div>`;
+ else if(mode==="128")body=`<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.c128Text?"checked":""}></div>`;
+ else if(mode==="dm")body=`<div class="setting"><span>FORMAT</span><span>ECC 200 / SQUARE</span></div>`;
+ else if(mode==="ean13"||mode==="upca")body=`<div class="setting"><span>FORMAT</span><span>RETAIL / EAN-UPC</span></div>`;
+ else body=`<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="qrTextSetting" type="checkbox" ${qrText?"checked":""}></div><div class="setting"><span>TEXT POSITION</span><select id="qrPosSetting"><option value="right">RIGHT</option><option value="left">LEFT</option><option value="top">TOP</option><option value="bottom">BOTTOM</option></select></div><div class="setting"><span>GENERATION</span><span>LOCAL / IN PAGE</span></div>`;
+ return fontSetting + bgSetting + body;
 }
 function openSettings(){
  $("settingsTitle").textContent=mode==="39"?"CODE 39 SETTINGS":mode==="itf"?"ITF SETTINGS":mode==="128"?"CODE 128 SETTINGS":mode==="dm"?"DATA MATRIX SETTINGS":"QR SETTINGS";
@@ -572,15 +629,19 @@ function openSettings(){
 
  const fs=$("fontSizeSetting");
  if(fs){
-   fs.value=localStorage.getItem("barcodeStudioFontSize") || "15";
+   fs.value=localStorage.getItem("barcodeStudioFontSize") || "17";
    fs.onchange=()=>{
-     document.documentElement.style.setProperty("--ui-scale",(fs.value/15).toFixed(4));
+     document.documentElement.style.setProperty("--ui-scale",(fs.value/17).toFixed(4));
      localStorage.setItem("barcodeStudioFontSize",fs.value);
    };
  }
 
  const x=$("s1");if(x)x.onchange=()=>{if(mode==="39")settings.c39Check=x.checked;else if(mode==="itf")settings.itfText=x.checked;else if(mode==="128")settings.c128Text=x.checked;render()};
  const y=$("s2");if(y)y.onchange=()=>{settings.c39Text=y.checked;render()};
+ const qt=$("qrTextSetting");if(qt)qt.onchange=()=>{qrText=qt.checked;render();syncURL(false)};
+ const qp=$("qrPosSetting");if(qp){qp.value=qrTextPos;qp.onchange=()=>{qrTextPos=qp.value;render();syncURL(false)}};
+ const bg=$("bgToggle");
+ if(bg)bg.onchange=()=>{bgEnabled=bg.checked;localStorage.setItem("barcodeStudioBg",bgEnabled?"on":"off");if(bgEnabled)enableBackground();else stopBackground()};
  $("modalBackdrop").classList.add("open");
 }
 
@@ -643,31 +704,102 @@ $("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){c
 $("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();closeCameraPanel();$("cameraStatus").textContent="Camera stopped.";};
 
 /* mode */
-const titles={39:"Code 39 generator.",itf:"ITF generator.",128:"Code 128 generator.",dm:"Data Matrix generator.",qr:"QR code generator.",ean13:"EAN-13 generator.",upca:"UPC-A generator."};
+const titles={39:"Code 39 generator",itf:"ITF generator",128:"Code 128 generator",dm:"Data Matrix generator",qr:"QR code generator",ean13:"EAN-13 generator",upca:"UPC-A generator"};
 const MODE_HASH={39:"Code39",itf:"ITF",128:"Code128",dm:"DataMatrix",ean13:"EAN13",upca:"UPCA",qr:"QR"};
 const HASH_MODE={};for(const k in MODE_HASH)HASH_MODE[MODE_HASH[k].toLowerCase()]=k;
-function modeFromHash(){return HASH_MODE[(location.hash||"").replace(/^#/,"").toLowerCase()]||null}
+function parseHash(){
+ const raw=(location.hash||"").replace(/^#/,"");
+ const modePart=(raw.match(/^[^?&]*/)||[""])[0];
+ const num=re=>{const m=raw.match(re);return m?parseInt(m[1],10):null};
+ const size=num(/[?&]size=(\d+)/);
+ const qrtsize=num(/[?&]qrtsize=(\d+)/);
+ const dpi=num(/[?&]dpi=(\d+)/);
+ const mf=raw.match(/[?&]format=(svg|png|jpg)/i);const format=mf?mf[1].toLowerCase():null;
+ const mt=raw.match(/[?&]qrtext=([01])/);const qrtext=mt?mt[1]==="1":null;
+ const mp=raw.match(/[?&]qrpos=(left|right|top|bottom)/);const qrpos=mp?mp[1]:null;
+ let data=null;
+ const di=raw.indexOf("?=");
+ if(di>=0){
+   let d=raw.slice(di+2);
+   const amp=d.indexOf("&");if(amp>=0)d=d.slice(0,amp);
+   try{d=decodeURIComponent(d)}catch(e){}
+   data=d;
+ }
+ return {mode:HASH_MODE[modePart.toLowerCase()]||null,data:data,size:size,qrtext:qrtext,qrpos:qrpos,qrtsize:qrtsize,dpi:dpi,format:format};
+}
+function modeFromHash(){return parseHash().mode}
+function buildHash(){
+ let h=MODE_HASH[mode]||"";
+ const d=($("data").value||"").trim();
+ if(d)h+="?="+encodeURIComponent(d);
+ h+="&size="+codeSize;
+ if(qrText)h+="&qrtext=1&qrpos="+qrTextPos+"&qrtsize="+qrTextSize;
+ if(exportDpi!==72)h+="&dpi="+exportDpi;
+ return h;
+}
+function syncURL(push){
+ const nh="#"+buildHash();
+ if(location.hash===nh)return;
+ try{if(push)history.pushState(null,"",nh);else history.replaceState(null,"",nh)}
+ catch(e){try{if(location.hash!==buildHash())location.hash=buildHash()}catch(_){}}
+}
+function applyHash(){
+ const h=parseHash();
+ if(h.data!==null&&h.data!==""){$("data").value=h.data;$("data").scrollTop=0}
+ if(h.size!==null&&!isNaN(h.size)){codeSize=Math.min(100,Math.max(10,h.size));paintSizeSlider()}
+ if(h.qrtext!==null)qrText=h.qrtext;
+ if(h.qrpos)qrTextPos=h.qrpos;
+ if(h.qrtsize!==null&&!isNaN(h.qrtsize)){qrTextSize=Math.min(48,Math.max(8,h.qrtsize));paintTextSlider()}
+ if(h.dpi===300||h.dpi===72)exportDpi=h.dpi;
+ if(h.mode&&h.mode!==mode)setMode(h.mode,true);else render();
+ if(h.format)setTimeout(()=>{try{saveAs(h.format)}catch(e){}},500);
+}
 function setMode(m,fromHash){
  mode=m;
- document.querySelectorAll(".switch button").forEach(b=>b.classList.toggle("active",b.dataset.mode===m));
+ document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b.dataset.mode===m));
  $("title").textContent=titles[m]||"";
  $("modalBackdrop").classList.remove("open");
  $("data").setAttribute("autocapitalize",m==="39"?"characters":"none");
  document.querySelector('#saveOptions button[data-format="svg"]').disabled=m==="qr";
+ updateMoreLabel();
  render();
- if(!fromHash&&MODE_HASH[m]&&(location.hash||"").replace(/^#/,"")!==MODE_HASH[m])location.hash=MODE_HASH[m];
+ if(!fromHash)syncURL(true);
 }
-document.querySelectorAll(".switch button").forEach(btn=>btn.onclick=()=>setMode(btn.dataset.mode));
-window.addEventListener("hashchange",()=>{const m=modeFromHash();if(m&&m!==mode)setMode(m,true)});
-$("data").addEventListener("input",render);
+function updateMoreLabel(){
+ const b=$("moreBtn");if(!b)return;
+ const extra={128:"CODE 128",ean13:"EAN-13",upca:"UPC-A"};
+ b.textContent=(extra[mode]||"MORE")+" ▾";
+}
+function toggleMoreMenu(open){const m=$("modeMore");if(!m)return;m.classList.toggle("open",open);const b=$("moreBtn");if(b)b.setAttribute("aria-expanded",m.classList.contains("open")?"true":"false")}
+document.querySelectorAll("[data-mode]").forEach(btn=>btn.onclick=()=>{toggleMoreMenu(false);setMode(btn.dataset.mode)});
+$("moreBtn").onclick=e=>{e.stopPropagation();toggleMoreMenu(!$("modeMore").classList.contains("open"))};
+document.addEventListener("click",e=>{if(!$("modeMore").contains(e.target))toggleMoreMenu(false)});
+window.addEventListener("popstate",applyHash);
+window.addEventListener("hashchange",applyHash);
+$("data").addEventListener("input",()=>{render();syncURL(false)});
 
 /* output size slider */
 const sizeRange=$("codeSizeRange");
-if(sizeRange){
+function paintSizeSlider(){
  const val=$("codeSizeValue");
- const paint=()=>{const pct=(codeSize-25)/75*100;sizeRange.style.background=`linear-gradient(90deg,var(--blue2) ${pct}%,var(--line) ${pct}%)`};
- sizeRange.oninput=()=>{codeSize=+sizeRange.value;val.textContent=codeSize+"%";paint();render()};
- paint();
+ if(sizeRange){const pct=(codeSize-10)/90*100;sizeRange.style.background=`linear-gradient(90deg,var(--blue2) ${pct}%,var(--line) ${pct}%)`;sizeRange.value=codeSize}
+ if(val)val.textContent=codeSize+"%";
+}
+if(sizeRange){
+ sizeRange.oninput=()=>{codeSize=+sizeRange.value;paintSizeSlider();render();syncURL(false)};
+ paintSizeSlider();
+}
+/* human-readable text size slider (QR caption) */
+const textRange=$("textSizeRange");
+function paintTextSlider(){
+ const val=$("textSizeValue");
+ if(textRange){const pct=(qrTextSize-8)/40*100;textRange.style.background=`linear-gradient(90deg,var(--blue2) ${pct}%,var(--line) ${pct}%)`;textRange.value=qrTextSize}
+ if(val)val.textContent=qrTextSize+" PX";
+}
+function updateTextSliderVisibility(){const row=$("textSizeRow");if(row)row.style.display=(mode==="qr"&&qrText)?"block":"none"}
+if(textRange){
+ textRange.oninput=()=>{qrTextSize=+textRange.value;paintTextSlider();render();syncURL(false)};
+ paintTextSlider();
 }
 /* copy payload */
 $("copyBtn").onclick=async()=>{
@@ -685,23 +817,62 @@ function payloadFileName(){
 }
 function toggleSaveMenu(open){const menu=$("saveMenu");menu.classList.toggle("open",open);$("saveBtn").setAttribute("aria-expanded",menu.classList.contains("open")?"true":"false")}
 $("saveBtn").onclick=e=>{e.stopPropagation();toggleSaveMenu(!$("saveMenu").classList.contains("open"))};
-document.querySelectorAll("#saveOptions button").forEach(b=>b.onclick=()=>{toggleSaveMenu(false);saveAs(b.dataset.format)});
+document.querySelectorAll("#saveOptions [data-format]").forEach(b=>b.onclick=()=>{toggleSaveMenu(false);saveAs(b.dataset.format,b.dataset.dpi?+b.dataset.dpi:undefined)});
 document.addEventListener("click",e=>{if(!$("saveMenu").contains(e.target))toggleSaveMenu(false)});
+function dpiScale(){return exportDpi/72}
 function targetSize(el,source){
  const r=el.getBoundingClientRect();
- const dpr=Math.min(window.devicePixelRatio||1,2);
- let w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);
+ const s=dpiScale();
+ let w=Math.round(r.width*s),h=Math.round(r.height*s);
  if(w<1||h<1){
-   w=(source&&(source.naturalWidth||source.width))||480;
-   h=(source&&(source.naturalHeight||source.height))||w;
+   w=Math.round((source&&(source.naturalWidth||source.width))||480);
+   h=Math.round((source&&(source.naturalHeight||source.height))||w);
  }
  return {w:Math.max(1,w),h:Math.max(1,h)};
+}
+function downloadBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),500)}
+function finishCanvas(cv,format){
+ const mime=format==="jpg"?"image/jpeg":"image/png";
+ cv.toBlob(blob=>{
+   if(!blob)return;
+   blob.arrayBuffer().then(ab=>{
+     let buf=ab;
+     if(exportDpi&&exportDpi!==72){try{buf=(format==="jpg")?setJpegDpi(ab,exportDpi):setPngDpi(ab,exportDpi)}catch(e){}}
+     downloadBlob(new Blob([buf],{type:mime}),payloadFileName()+"."+format);
+   });
+ },mime,format==="jpg"?0.92:undefined);
 }
 function exportElement(source,sizeEl,format){
  const {w,h}=targetSize(sizeEl,source);
  const out=document.createElement("canvas");out.width=w;out.height=h;
  const ctx=out.getContext("2d");ctx.fillStyle=bgColor;ctx.fillRect(0,0,w,h);ctx.drawImage(source,0,0,w,h);
- out.toBlob(blob=>{if(!blob)return;const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=payloadFileName()+"."+format;a.click();setTimeout(()=>URL.revokeObjectURL(u),500)},format==="jpg"?"image/jpeg":"image/png",format==="jpg"?0.92:undefined);
+ finishCanvas(out,format);
+}
+function crc32(bytes){let c=~0;for(let i=0;i<bytes.length;i++){c^=bytes[i];for(let k=0;k<8;k++)c=(c>>>1)^(0xEDB88320&-(c&1))}return (~c)>>>0}
+function setPngDpi(ab,dpi){
+ const b=new Uint8Array(ab);
+ const ppm=Math.round(dpi/0.0254);
+ const chunk=new Uint8Array(21);
+ const dv=new DataView(chunk.buffer);
+ dv.setUint32(0,9);
+ chunk[4]=0x70;chunk[5]=0x48;chunk[6]=0x59;chunk[7]=0x73;
+ dv.setUint32(8,ppm);dv.setUint32(12,ppm);chunk[16]=1;
+ dv.setUint32(17,crc32(chunk.subarray(4,17)));
+ const at=8+25;
+ const out=new Uint8Array(b.length+chunk.length);
+ out.set(b.subarray(0,at),0);out.set(chunk,at);out.set(b.subarray(at),at+chunk.length);
+ return out.buffer;
+}
+function setJpegDpi(ab,dpi){
+ const b=new Uint8Array(ab);
+ if(b[0]===0xFF&&b[1]===0xD8&&b[2]===0xFF&&b[3]===0xE0&&b[4]===0x4A&&b[5]===0x46&&b[6]===0x49&&b[7]===0x46){
+   b[11]=1;b[12]=(dpi>>8)&0xFF;b[13]=dpi&0xFF;b[14]=(dpi>>8)&0xFF;b[15]=dpi&0xFF;
+   return b.buffer;
+ }
+ const seg=new Uint8Array([0xFF,0xE0,0x00,0x10,0x4A,0x46,0x49,0x46,0x00,0x01,0x01,0x01,(dpi>>8)&0xFF,dpi&0xFF,(dpi>>8)&0xFF,dpi&0xFF,0x00,0x00]);
+ const out=new Uint8Array(b.length+seg.length);
+ out.set(b.subarray(0,2),0);out.set(seg,2);out.set(b.subarray(2),2+seg.length);
+ return out.buffer;
 }
 function sizedSVG(){
  const svgEl=document.querySelector("#barcodeBox svg");
@@ -713,15 +884,46 @@ function sizedSVG(){
  clone.setAttribute("height",Math.round(r.height));
  return '<?xml version="1.0" encoding="UTF-8"?>\n'+clone.outerHTML;
 }
-function saveAs(format){
+function qrExportCanvas(){
+ const visible=document.querySelector("#qrBox img")||document.querySelector("#qrBox canvas");
+ const r=visible?visible.getBoundingClientRect():{width:256,height:256};
+ const s=dpiScale();
+ const qrW=Math.max(1,Math.round(r.width*s)),qrH=Math.max(1,Math.round(r.height*s));
+ const gen=document.createElement("div");gen.style.cssText="position:fixed;left:-99999px;top:0";document.body.appendChild(gen);
+ let qc=null;
+ try{new QRCode(gen,{text:inputValue()||" ",width:qrW,height:qrH,colorDark:barColor,colorLight:bgColor,correctLevel:QRCode.CorrectLevel.M});qc=gen.querySelector("canvas")}catch(e){}
+ document.body.removeChild(gen);
+ const pixel=qc||document.querySelector("#qrBox canvas")||visible;
+ if(!qrText){
+   const out=document.createElement("canvas");out.width=qrW;out.height=qrH;
+   const ctx=out.getContext("2d");ctx.fillStyle=bgColor;ctx.fillRect(0,0,qrW,qrH);ctx.drawImage(pixel,0,0,qrW,qrH);return out;
+ }
+ const text=inputValue();
+ const cap=document.querySelector(".qr-caption");
+ const capFs=cap?parseFloat(getComputedStyle(cap).fontSize):qrTextSize;
+ const fs=Math.max(1,Math.round((capFs||qrTextSize)*s));
+ const gap=Math.round(12*s);
+ const font="400 "+fs+"px \"PT Mono\",monospace";
+ const mctx=document.createElement("canvas").getContext("2d");mctx.font=font;
+ const tw=Math.ceil(mctx.measureText(text).width),th=Math.ceil(fs*1.3);
+ let W,H,qx,qy,tx,ty;
+ if(qrTextPos==="left"){W=tw+gap+qrW;H=Math.max(qrH,th);qx=tw+gap;qy=(H-qrH)/2;tx=0;ty=(H-th)/2}
+ else if(qrTextPos==="top"){W=Math.max(qrW,tw);H=th+gap+qrH;qx=(W-qrW)/2;qy=th+gap;tx=(W-tw)/2;ty=0}
+ else if(qrTextPos==="bottom"){W=Math.max(qrW,tw);H=qrH+gap+th;qx=(W-qrW)/2;qy=0;tx=(W-tw)/2;ty=qrH+gap}
+ else{W=qrW+gap+tw;H=Math.max(qrH,th);qx=0;qy=(H-qrH)/2;tx=qrW+gap;ty=(H-th)/2}
+ const out=document.createElement("canvas");out.width=W;out.height=H;
+ const ctx=out.getContext("2d");ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
+ ctx.drawImage(pixel,qx,qy,qrW,qrH);
+ ctx.font=font;ctx.fillStyle=barColor;ctx.textBaseline="middle";ctx.textAlign="left";
+ ctx.fillText(text,tx,ty+th/2);
+ return out;
+}
+function saveAs(format,dpi){
+ if(dpi){exportDpi=dpi;syncURL(false)}
  if(mode==="qr"){
    if(format==="svg")return;
-   const box=$("qrBox");
-   const canvas=box&&box.querySelector("canvas");
-   const imgEl=box&&box.querySelector("img");
-   const source=canvas||imgEl;
-   if(!source){setStatus("Nothing to export yet.",true);return}
-   exportElement(source,imgEl||box||source,format);return;
+   if(typeof QRCode==="undefined"){setStatus("QR library did not load. Check the internet connection once.",true);return}
+   finishCanvas(qrExportCanvas(),format);return;
  }
  if(!lastSVG){setStatus("Nothing to export yet.",true);return}
  if(format==="svg"){downloadText(sizedSVG(),payloadFileName()+".svg","image/svg+xml;charset=utf-8");return}
@@ -738,16 +940,41 @@ $("modalBackdrop").onclick=e=>{if(e.target===$("modalBackdrop"))$("modalBackdrop
 window.addEventListener("pagehide",stopCamera);
 let qrResizeTimer;window.addEventListener("resize",()=>{if(mode!=="qr")return;clearTimeout(qrResizeTimer);qrResizeTimer=setTimeout(()=>{if(mode==="qr")renderQR()},180)});
 
+/* Optional animated background (Vanta DOTS, lazy-loaded from CDN) */
+let bgEnabled=true,vantaEffect=null;
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.async=false;s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error(src));document.head.appendChild(s)})}
+function startBackground(){
+ const el=document.querySelector(".shell");if(!el||!window.VANTA)return;
+ try{
+   vantaEffect=window.VANTA.DOTS({el:el,mouseControls:true,touchControls:true,gyroControls:false,minHeight:200,minWidth:200,scale:1,scaleMobile:1,color:0xeb9646,color2:0x0,backgroundAlpha:0,size:1.2,spacing:15,showLines:false});
+ }catch(e){vantaEffect=null;setStatus("Animated background unavailable on this device.",true)}
+}
+async function enableBackground(){
+ if(vantaEffect)return;
+ if(!window.VANTA){
+   setStatus("Loading animated background…");
+   try{
+     if(!window.THREE)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js");
+     await loadScript("https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js");
+   }catch(e){setStatus("Could not load the animated background.",true);return}
+ }
+ if(!bgEnabled)return;
+ setStatus("");
+ startBackground();
+}
+function stopBackground(){if(vantaEffect){try{vantaEffect.destroy()}catch(e){}vantaEffect=null}}
+
 /* Theme: dark is the default. Remember the user's choice. */
 const savedTheme=localStorage.getItem("barcodeStudioTheme");
 if(savedTheme==="light")document.body.classList.add("light");
 function updateThemeButton(){const light=document.body.classList.contains("light");$("themeIcon").textContent=light?"☾":"☀";$("themeLabel").textContent=light?"DARK":"LIGHT";$("themeSwitch").setAttribute("aria-label",light?"Switch to dark mode":"Switch to light mode")}
 $("themeSwitch").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("barcodeStudioTheme",document.body.classList.contains("light")?"light":"dark");updateThemeButton();render()};
 updateThemeButton();
-const savedFontSize=localStorage.getItem("barcodeStudioFontSize")||"15";
-document.documentElement.style.setProperty("--ui-scale",(savedFontSize/15).toFixed(4));
-const startMode=modeFromHash();
-if(startMode&&startMode!==mode)setMode(startMode,true);else render();
+const savedFontSize=localStorage.getItem("barcodeStudioFontSize")||"17";
+document.documentElement.style.setProperty("--ui-scale",(savedFontSize/17).toFixed(4));
+applyHash();
+bgEnabled=localStorage.getItem("barcodeStudioBg")!=="off";
+if(bgEnabled)enableBackground();
 </script>
 </body>
 </html>
