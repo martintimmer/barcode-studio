@@ -21,7 +21,7 @@
   Camera access requires HTTPS or localhost on iOS/iPadOS.
 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js"></script>
+<script src="https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
 <script src="https://unpkg.com/bwip-js@4.6.0/dist/bwip-js-min.js"></script>
 
 <style>
@@ -74,6 +74,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
   background:linear-gradient(120deg,transparent 44%,rgba(223,119,90,.11) 45%,transparent 60%);
   pointer-events:none;
 }
+.shell canvas{pointer-events:none!important;touch-action:pan-y}
 .cross{position:absolute;width:12px;height:12px;opacity:.5}
 .cross:before,.cross:after{content:"";position:absolute;background:#cfd2cc}
 .cross:before{width:12px;height:1px;top:6px}.cross:after{height:12px;width:1px;left:6px}
@@ -450,6 +451,7 @@ body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
       <div class="switch">
         <button data-mode="qr">QR</button>
         <button data-mode="dm">DATA MATRIX</button>
+        <button data-mode="microqr">MICRO QR</button>
         <button data-mode="39" class="active">CODE 39</button>
         <button data-mode="itf">ITF</button>
         <button data-mode="128" class="tab-extra">CODE 128</button>
@@ -619,6 +621,7 @@ body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
 <script>
 const NS="http://www.w3.org/2000/svg";
 const $=id=>document.getElementById(id);
+function isMobileDevice(){return /iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)||/Android/i.test(navigator.userAgent)||!!(window.matchMedia&&matchMedia("(pointer:coarse)").matches)}
 let mode="39",lastSVG="",qrSize=512,dmSize=8,codeSize=50,qrText=false,qrTextPos="right",qrTextSize=16,qrTextGap=12,exportDpi=72,scanner=null,scannerRunning=false;
 let barColor="#092d4d",bgColor="#ffffff";
 const settings={c39Check:false,c39Text:true,itfText:true,c128Text:true};
@@ -632,7 +635,7 @@ function applyLookSettings(){
 
 function esc(s){return String(s).replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));}
 function themeColors(){return document.body.classList.contains("light")?{bar:"#092d4d",bg:"#ffffff"}:{bar:"#cdcdcd",bg:"#05080b"};}
-const DEFAULT_PAYLOAD={39:"1002",itf:"1002",128:"1002",dm:"1002",qr:"1002",ean13:"590123412345",upca:"03600029145"};
+const DEFAULT_PAYLOAD={39:"1002",itf:"1002",128:"1002",dm:"1002",qr:"1002",microqr:"1052757",ean13:"590123412345",upca:"03600029145"};
 function inputValue(){return ($("data").value||"").trim()||DEFAULT_PAYLOAD[mode]||"1002";}
 const INPUT_HINTS={
  itf:"NOTE: ITF accepts digits 0-9 only, and the total count must be EVEN. Examples: 1234 or 123456.",
@@ -704,9 +707,20 @@ function renderDM(){
  if(typeof bwipjs==="undefined")return fail("Data Matrix library did not load. Check the internet connection once.");
  try{
    const svg=bwipjs.toSVG({bcid:"datamatrix",text:raw||" ",scale:dmSize,padding:12,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
-   showSVG(svg,"DATA MATRIX");
- }catch(e){fail("Unable to generate this Data Matrix. Try different text.");}
+    showSVG(svg,"DATA MATRIX");
+  }catch(e){fail("Unable to generate this Data Matrix. Try different text.");}
 }
+
+/* MICRO QR: M4 (17x17 modules, single L-shaped finder) via bwip-js */
+function renderMicroQR(){
+ const raw=inputValue();
+ if(typeof bwipjs==="undefined")return fail("Micro QR library did not load. Check the internet connection once.");
+ try{
+   const svg=bwipjs.toSVG({bcid:"microqrcode",text:raw||" ",version:"M4",eclevel:"L",scale:8,padding:12,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
+   showSVG(svg,"MICRO QR M4");
+ }catch(e){fail("Unable to generate this Micro QR. Version M4 holds up to 35 digits — try shorter numeric text.");}
+}
+
 
 /* EAN-13 / UPC-A (retail 1D) via bwip-js */
 function renderBwip1D(bcid,label){
@@ -755,7 +769,7 @@ function showSVG(svg,name){
  lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
 }
 function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
-function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";updateSaveLinks();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";updateSaveLinks();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="microqr")renderMicroQR();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
 
 /* settings */
 function settingsMarkup(){
@@ -808,19 +822,22 @@ function openSettings(){
 }
 
 /* camera */
-const ZX_FORMAT_NAMES={0:"aztec",1:"codabar",2:"code_39",3:"code_93",4:"code_128",5:"data_matrix",6:"ean_8",7:"ean_13",8:"itf",9:"maxicode",10:"pdf_417",11:"qr_code",12:"rss_14",13:"rss_expanded",14:"upc_a",15:"upc_e"};
-const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm",ean_13:"ean13",upc_a:"upca"};
-const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR",ean13:"EAN-13",upca:"UPC-A"};
+const ZX_FORMAT_NAMES={0:"aztec",1:"codabar",2:"code_39",3:"code_93",4:"code_128",5:"data_matrix",6:"ean_8",7:"ean_13",8:"itf",9:"maxicode",10:"pdf_417",11:"qr_code",12:"rss_14",13:"rss_expanded",14:"upc_a",15:"upc_e",17:"micro_qr_code"};
+const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm",ean_13:"ean13",upca:"upca",micro_qr_code:"microqr"};
+const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR",microqr:"MICRO QR",ean13:"EAN-13",upca:"UPC-A"};
 function openCameraPanel(){$("cameraPanel").classList.add("open");document.body.classList.add("scanning")}
 function closeCameraPanel(){$("cameraPanel").classList.remove("open");document.body.classList.remove("scanning")}
-let scanLocked=false;
+let scanLocked=false,scanControls=null,scanStarting=false;
 async function startCamera(){
- if(scannerRunning)return;
+ if(scannerRunning||scanStarting)return;
  openCameraPanel();
+ $("cameraStatus").textContent="";
  if(!window.isSecureContext){$("cameraStatus").textContent="Camera needs a secure page. Open this file over https:// or localhost on iOS/Android.";return}
  if(!navigator.mediaDevices?.getUserMedia){$("cameraStatus").textContent="Camera access is not available in this browser.";return}
  if(typeof ZXingBrowser==="undefined"){ $("cameraStatus").textContent="Scanner library could not load. Check the internet connection once.";return}
- try{releaseCamera()}catch(e){}
+ scanStarting=true;
+ $("cameraButton").disabled=true;
+ await releaseCamera();
  scanLocked=false;
  $("cameraStatus").textContent="Requesting camera permission…";
  try{
@@ -829,12 +846,12 @@ async function startCamera(){
    hints.set(2,[ // DecodeHintType.POSSIBLE_FORMATS — everything ZXing can read
      BF.QR_CODE,BF.DATA_MATRIX,BF.AZTEC,BF.PDF_417,BF.MAXICODE,
      BF.CODE_39,BF.CODE_93,BF.CODE_128,BF.CODABAR,BF.ITF,
-     BF.EAN_13,BF.EAN_8,BF.UPC_A,BF.UPC_E,BF.RSS_14,BF.RSS_EXPANDED
-   ]);
+     BF.EAN_13,BF.EAN_8,BF.UPC_A,BF.UPC_E,BF.RSS_14,BF.RSS_EXPANDED,BF.MICRO_QR_CODE
+   ].filter(Boolean));
    hints.set(3,true); // DecodeHintType.TRY_HARDER
    scanner=new ZXingBrowser.BrowserMultiFormatReader(hints);
    scannerRunning=true;
-   await scanner.decodeFromConstraints(
+   scanControls=await scanner.decodeFromConstraints(
      {audio:false,video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}}},
      $("cameraVideo"),
      (result,error)=>{
@@ -846,7 +863,8 @@ async function startCamera(){
          $("data").scrollTop=0;
          let fmt,m;
          try{fmt=ZX_FORMAT_NAMES[result.getBarcodeFormat()];m=ZX_TO_MODE[fmt]}catch(e){}
-         if(m)setMode(m);else render();
+         if(codeSize===50){codeSize=75;paintSizeSlider()}
+         if(m)setMode(m);else{render();syncURL(false)}
          stopCamera();
          closeCameraPanel();
          const label=m?modeLabels[m]:(fmt?fmt.replace(/_/g," ").toUpperCase():"code");
@@ -860,21 +878,26 @@ async function startCamera(){
  }catch(e){
    scannerRunning=false;
    $("cameraStatus").textContent="Camera could not start. On iPhone/iPad, open this page over HTTPS or localhost and allow camera access.";
+ }finally{
+   scanStarting=false;
+   $("cameraButton").disabled=false;
  }
 }
-function releaseCamera(){
+async function releaseCamera(){
+ try{if(scanControls)scanControls.stop()}catch(e){}
+ scanControls=null;
  try{if(scanner)scanner.reset()}catch(e){}
  scanner=null;
  const v=$("cameraVideo");
  if(v&&v.srcObject){try{v.srcObject.getTracks().forEach(t=>t.stop())}catch(e){}try{v.srcObject=null}catch(e){}}
 }
-function stopCamera(){releaseCamera();scannerRunning=false}
+async function stopCamera(){scannerRunning=false;scanLocked=true;await releaseCamera()}
 $("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){closeCameraPanel();stopCamera()}else{startCamera()}};
 $("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();closeCameraPanel();$("cameraStatus").textContent="Camera stopped.";};
 
 /* mode */
-const titles={39:"Code 39 generator",itf:"ITF generator",128:"Code 128 generator",dm:"Data Matrix generator",qr:"QR code generator",ean13:"EAN-13 generator",upca:"UPC-A generator"};
-const MODE_HASH={39:"Code39",itf:"ITF",128:"Code128",dm:"DataMatrix",ean13:"EAN13",upca:"UPCA",qr:"QR"};
+const titles={39:"Code 39 generator",itf:"ITF generator",128:"Code 128 generator",dm:"Data Matrix generator",qr:"QR code generator",microqr:"Micro QR generator",ean13:"EAN-13 generator",upca:"UPC-A generator"};
+const MODE_HASH={39:"Code39",itf:"ITF",128:"Code128",dm:"DataMatrix",ean13:"EAN13",upca:"UPCA",qr:"QR",microqr:"MicroQR"};
 const HASH_MODE={};for(const k in MODE_HASH)HASH_MODE[MODE_HASH[k].toLowerCase()]=k;
 function parseHash(){
  const raw=(location.hash||"").replace(/^#/,"");
@@ -1144,7 +1167,7 @@ function loadScript(src){return new Promise((res,rej)=>{const s=document.createE
 function startBackground(){
  const el=document.querySelector(".shell");if(!el||!window.VANTA)return;
  try{
-   vantaEffect=window.VANTA.DOTS({el:el,mouseControls:true,touchControls:true,gyroControls:false,minHeight:200,minWidth:200,scale:1,scaleMobile:1,color:0xeb9646,color2:0x0,backgroundAlpha:0,size:1.2,spacing:15,showLines:false});
+   vantaEffect=window.VANTA.DOTS({el:el,mouseControls:!isMobileDevice(),touchControls:false,gyroControls:false,minHeight:200,minWidth:200,scale:1,scaleMobile:1,color:0xeb9646,color2:0x0,backgroundAlpha:0,size:1.2,spacing:15,showLines:false});
  }catch(e){vantaEffect=null;setStatus("Animated background unavailable on this device.",true)}
 }
 async function enableBackground(){
@@ -1378,7 +1401,8 @@ color1=localStorage.getItem("barcodeStudioColor1")||color1;
 color2=localStorage.getItem("barcodeStudioColor2")||color2;
 applyLookSettings();
 applyHash();
-bgEnabled=localStorage.getItem("barcodeStudioBg")!=="off";
+const savedBg=localStorage.getItem("barcodeStudioBg");
+bgEnabled=savedBg?savedBg==="on":!isMobileDevice();
 if(bgEnabled)enableBackground();
 </script>
 </body>

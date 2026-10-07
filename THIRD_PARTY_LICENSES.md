@@ -8,7 +8,7 @@ are provided for attribution. Full license texts are available at the links.
 | Component | Version / source | Copyright | License (SPDX) |
 | --- | --- | --- | --- |
 | QRCode.js — https://github.com/davidshimjs/qrcodejs | 1.0.0 (cdnjs) | © davidshimjs | MIT |
-| ZXing Browser — https://github.com/zxing-js/browser | 0.1.5 (unpkg) | © ZXing authors | Apache-2.0 |
+| ZXing Browser — https://github.com/zxing-js/browser | 0.2.1 (unpkg) | © ZXing authors | Apache-2.0 |
 | ZXing Library — https://github.com/zxing-js/library | (bundled with @zxing/browser) | © ZXing authors | Apache-2.0 |
 | bwip-js — https://github.com/metafloor/bwip-js | 4.6.0 (unpkg) | © Mark Warren / metafloor | MIT |
 | three.js — https://github.com/mrdoob/three.js | r121 (cdnjs) | © three.js authors | MIT |
