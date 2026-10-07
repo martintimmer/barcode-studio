@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#070b0f">
+<title>Barcode Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!--
+  Barcode Studio
+  Single HTML file.
+  QR generation: QRCode.js CDN
+  Camera decoding: ZXing Browser CDN
+  Camera access requires HTTPS or localhost on iOS/iPadOS.
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js"></script>
+<script src="https://unpkg.com/bwip-js@4.6.0/dist/bwip-js-min.js"></script>
+
+<style>
+ :root{
+  --paper:#070b0f;--ink:#f3f7f9;--muted:#9aaab4;--line:#202a31;
+  --blue:#72a9d8;--blue2:#9bc9ed;--coral:#df775a;--card:#0f151a;
+  --input:#05080b;--white:#ffffff;--button:#17222a;--buttonHover:#253741;
+  --btnText:#f3f7f9;
+  --payloadBg:#05080b;--payloadInk:#f3f7f9;--shadow:0 3px 0 rgba(0,0,0,.45);
+  --ui-font-size:15px;--ui-scale:1;
+}
+body.light{
+  --paper:#f7f5f0;--ink:#092d4d;--muted:#6d7d87;--line:#dfe3df;--card:#fffefa;
+  --input:#fff;--white:#fff;--button:#092d4d;--buttonHover:#174766;
+  --btnText:#f3f7f9;--blue:#1f6aa5;--blue2:#174766;
+  --payloadBg:#ffffff;--payloadInk:#092d4d;--shadow:0 3px 0 rgba(9,45,77,.08)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--coral)}
+body{
+  font-size:var(--ui-font-size);
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;color:var(--ink);padding:4px;
+  -webkit-text-size-adjust:100%;
+}
+button,input,textarea,select{font:inherit}
+button{touch-action:manipulation}
+button:disabled{opacity:.45;cursor:not-allowed}
+.action{background:var(--button);color:var(--btnText);border-color:var(--button)}
+.action:hover{background:var(--buttonHover);color:#fff}
+.action.secondary{background:var(--card);color:var(--ink);border-color:var(--line)}
+.action.secondary:hover{background:var(--button);color:#fff}
+.bottom-action{background:var(--button);color:var(--btnText);border-color:var(--line)}
+.bottom-action.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.bottom-action:hover{background:var(--buttonHover);color:#fff}
+.close{background:var(--button);color:var(--btnText);border-color:var(--line)}
+.close:hover{background:var(--buttonHover);color:#fff}
+.theme-switch:hover{background:var(--buttonHover);color:#fff}
+.switch button{background:var(--button);color:var(--ink);border-color:var(--line)}
+.switch button.active{background:var(--ink);color:var(--paper)}
+.switch button:hover:not(.active){background:var(--buttonHover);color:#fff}
+.shell{
+  min-height:calc(100vh - 8px);min-height:calc(100svh - 8px);
+  background:var(--paper);border:1px solid var(--line);
+  position:relative;overflow:hidden;
+  padding:18px max(18px,env(safe-area-inset-right)) 28px max(18px,env(safe-area-inset-left));
+}
+.shell{zoom:var(--ui-scale,1);min-height:calc((100svh - 8px)/var(--ui-scale,1))}
+.shell:before{
+  content:"";position:absolute;inset:-120px -40px auto;height:220px;
+  background:linear-gradient(120deg,transparent 44%,rgba(223,119,90,.11) 45%,transparent 60%);
+  pointer-events:none;
+}
+.cross{position:absolute;width:12px;height:12px;opacity:.5}
+.cross:before,.cross:after{content:"";position:absolute;background:#cfd2cc}
+.cross:before{width:12px;height:1px;top:6px}.cross:after{height:12px;width:1px;left:6px}
+.c1{top:12px;left:12px}.c2{top:12px;right:12px}.c3{bottom:12px;left:12px}.c4{bottom:12px;right:12px}
+header,main,.footer{max-width:1100px;margin-left:auto;margin-right:auto;position:relative}
+header{margin-bottom:24px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}.scan-button{min-height:42px;padding:7px 12px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:9px "Courier New",monospace;letter-spacing:1.2px;cursor:pointer;box-shadow:var(--shadow)}.scan-button:hover{background:var(--buttonHover);color:#fff}.theme-switch{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 11px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font:9px "Courier New",monospace;letter-spacing:1.2px;cursor:pointer;box-shadow:var(--shadow)}.theme-switch span:first-child{font-size:16px;line-height:1}.brand{font-size:36px;font-weight:800;letter-spacing:-1.5px;margin:0 0 10px}
+.kicker{font:10px "Courier New",monospace;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin-top:14px}
+.toolbar{
+  display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:16px
+}
+.label{font:11px "Courier New",monospace;letter-spacing:2px;color:var(--blue2);font-weight:bold}
+h2{margin:5px 0 0;font-size:23px;letter-spacing:-.5px}
+.switch{
+  display:flex;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);
+  overflow:auto;max-width:100%;-webkit-overflow-scrolling:touch
+}
+.switch button{
+  min-height:44px;border:0;border-right:1px solid #e3e6e2;background:var(--card);color:var(--ink);
+  padding:10px 14px;white-space:nowrap;font:10px "Courier New",monospace;letter-spacing:1.1px;cursor:pointer
+}
+.switch button:last-child{border-right:0}
+.switch button.active{background:var(--ink);color:white}
+
+.editor{margin-bottom:14px}
+.workbench{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}
+.workbench .editor{margin-bottom:0}
+.workbench .preview-card{min-height:100%}
+.workbench .output-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.size-bar{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:12px 14px}
+.size-bar-head{display:flex;justify-content:space-between;align-items:center;font:10px "Courier New",monospace;letter-spacing:1.6px}
+.size-bar .size-range{margin-top:12px}
+.panel{
+  background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:15px
+}
+.field-label{display:block;margin-bottom:7px;font:10px "Courier New",monospace;letter-spacing:1.7px}
+textarea{
+  width:100%;height:104px;resize:vertical;border:1px solid var(--line);background:var(--input);color:var(--ink);
+  font:16px "Courier New",monospace;padding:12px 13px;outline:none;border-radius:0
+}
+textarea{
+  background:var(--payloadBg)!important;
+  color:var(--payloadInk)!important;
+  border-color:var(--line)!important;
+  caret-color:var(--payloadInk);
+  font-weight:600;
+}
+textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
+textarea:focus{border-color:var(--blue2)!important;box-shadow:0 0 0 2px rgba(114,169,216,.18)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.save-menu{position:relative;display:inline-block}
+.save-options{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:132px;
+  background:var(--card);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.28);
+  display:none;flex-direction:column;overflow:hidden
+}
+.save-menu.open .save-options{display:flex}
+.save-options button{
+  min-height:40px;border:0;border-bottom:1px solid var(--line);background:var(--card);color:var(--ink);
+  text-align:left;padding:9px 14px;font:10px "Courier New",monospace;letter-spacing:1.4px;cursor:pointer
+}
+.save-options button:last-child{border-bottom:0}
+.save-options button:hover:not(:disabled){background:var(--buttonHover);color:#fff}
+.save-options button:disabled{opacity:.35;cursor:not-allowed}
+.action{
+  min-height:44px;border:1px solid var(--ink);background:var(--ink);color:white;padding:10px 14px;
+  cursor:pointer;font:10px "Courier New",monospace;letter-spacing:1px
+}
+.action.secondary{background:var(--card);color:var(--ink)}
+.status{font:10px "Courier New",monospace;color:#7a878c;margin-top:8px;min-height:12px}
+.error{color:#b33d31;font-weight:bold}
+
+.preview-card{
+  background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);
+  padding:14px;min-height:350px;display:flex;flex-direction:column
+}
+.card-head{display:flex;justify-content:space-between;align-items:center;font:9px "Courier New",monospace;letter-spacing:1.2px}
+.card-title{margin-top:12px;font:10px "Courier New",monospace;letter-spacing:1.8px;color:#61727c}
+.preview{flex:1;display:flex;align-items:center;justify-content:center;margin:12px 0;overflow:hidden}
+.barcode-box{
+  width:100%;padding:18px 8px;background:var(--white);border:1px solid var(--line);
+  text-align:center;overflow:auto
+}
+.barcode-box svg{width:100%;height:auto;display:block}
+.qr-box{
+  width:min(320px,82vw);aspect-ratio:1;background:var(--white);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;padding:12px
+}
+.qr-box canvas,.qr-box img{width:100%!important;height:100%!important;image-rendering:pixelated}
+.quote{font-size:14px;line-height:1.45;margin:0;color:var(--ink)}
+.meta{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:9px;font:8px "Courier New",monospace;letter-spacing:.7px}
+.caption{margin-top:10px;font:10px "Courier New",monospace;letter-spacing:2px;color:var(--blue2);font-weight:bold}
+
+/* compact bottom box */
+.bottom-box{
+  margin-top:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);
+  padding:9px 11px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;gap:12px
+}
+.read-number{font-size:20px;font-weight:800;line-height:1}
+.read-small{font:8px "Courier New",monospace;color:var(--muted);letter-spacing:1px}
+.read-payload{font:10px "Courier New",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bottom-action{
+  min-height:40px;padding:8px 11px;border:1px solid var(--line);background:var(--button);color:var(--ink);
+  font:9px "Courier New",monospace;letter-spacing:1px;white-space:nowrap
+}
+.bottom-action.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.camera-panel{
+  display:none;margin-top:14px;background:var(--card);border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:14px
+}
+.camera-panel.open{display:block}
+.camera-wrap{position:relative;background:#03070a;overflow:hidden}
+#cameraVideo{width:100%;display:block;max-height:55svh;object-fit:cover}
+.scan-line{
+  position:absolute;left:10%;right:10%;top:50%;height:2px;background:#df775a;
+  box-shadow:0 0 12px rgba(223,119,90,.8);pointer-events:none
+}
+.camera-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.camera-status{font:10px "Courier New",monospace;color:var(--muted);margin-top:8px}
+
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(9,45,77,.28);z-index:30;
+  display:none;align-items:flex-end;justify-content:center;padding:14px
+}
+.modal-backdrop.open{display:flex}
+.modal{
+  width:min(620px,100%);max-height:min(82svh,700px);overflow:auto;
+  background:var(--paper);border:1px solid var(--line);box-shadow:0 10px 40px rgba(0,0,0,.18);
+  padding:18px
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal-head strong{font:12px "Courier New",monospace;letter-spacing:1.5px}
+.close{width:44px;height:44px;border:1px solid var(--line);background:var(--button);color:var(--btnText);font-size:20px}
+.setting{
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  padding:11px 0;border-bottom:1px solid var(--line);font:10px "Courier New",monospace;letter-spacing:1px
+}
+.setting input[type=checkbox]{width:20px;height:20px;accent-color:var(--ink)}
+.setting select{min-height:40px;border:1px solid var(--line);background:var(--button);color:var(--btnText);padding:7px;font:10px "Courier New",monospace}
+.setting select option{background:var(--card);color:var(--ink)}
+.size-value{font:11px "Courier New",monospace;color:var(--blue2);font-weight:bold;letter-spacing:1px}
+.qr-slider-wrap{padding:16px 2px 6px}
+.size-range{
+  -webkit-appearance:none;appearance:none;display:block;width:100%;height:6px;border-radius:999px;
+  background:var(--line);outline:none;cursor:pointer
+}
+.size-range::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--blue2);border:3px solid var(--card);box-shadow:0 1px 4px rgba(0,0,0,.35);
+  cursor:pointer;transition:transform .12s ease
+}
+.size-range::-webkit-slider-thumb:hover{transform:scale(1.12)}
+.size-range::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;background:var(--blue2);
+  border:3px solid var(--card);box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:pointer
+}
+.size-range::-moz-range-progress{background:var(--blue2);height:6px;border-radius:999px}
+.size-range:focus-visible{box-shadow:0 0 0 3px rgba(114,169,216,.35)}
+.qr-slider-scale{display:flex;justify-content:space-between;margin-top:7px;font:9px "Courier New",monospace;letter-spacing:1px;color:var(--muted)}
+
+/* Final contrast pass: no washed-out gray controls in dark mode. */
+body:not(.light){
+  background:#df775a;
+  color-scheme:dark;
+}
+body:not(.light) .shell{background:#070b0f;border-color:#202a31}
+body:not(.light) .panel,
+body:not(.light) .preview-card,
+body:not(.light) .bottom-box,
+body:not(.light) .camera-panel,
+body:not(.light) .modal{background:#0f151a;color:#f3f7f9}
+body:not(.light) .action{
+  background:#17222a;color:#fff;border-color:#344650
+}
+body:not(.light) .action:hover{background:#253741;color:#fff}
+body:not(.light) .action.secondary,
+body:not(.light) .bottom-action,
+body:not(.light) .close{
+  background:#111a20;color:#f3f7f9;border-color:#344650
+}
+body:not(.light) .action.secondary:hover,
+body:not(.light) .bottom-action:hover,
+body:not(.light) .close:hover{background:#253741;color:#fff}
+body:not(.light) .switch button{
+  background:#111a20;color:#dce7ec;border-color:#2b3942
+}
+body:not(.light) .switch button.active{
+  background:#f3f7f9;color:#070b0f;border-color:#f3f7f9
+}
+body:not(.light) .theme-switch,
+body:not(.light) .scan-button{
+  background:#111a20;color:#f3f7f9;border-color:#344650
+}
+body:not(.light) .barcode-box,
+body:not(.light) .qr-box{background:#05080b;border-color:var(--line)}
+body:not(.light) .settings-button{
+  background:#111a20;color:#f3f7f9;border-color:#344650
+}
+body:not(.light) .setting select{
+  background:#111a20;color:#f3f7f9;border-color:#344650
+}
+body:not(.light) .save-options,
+body:not(.light) .save-options button{
+  background:#111a20;color:#f3f7f9;border-color:#344650
+}
+/* Light mode: keep control fills bright; dark fills are reserved for dark mode. */
+body.light .action,
+body.light .action.secondary,
+body.light .bottom-action,
+body.light .close,
+body.light .theme-switch,
+body.light .scan-button,
+body.light .setting select{
+  background:var(--card);color:var(--ink);border-color:var(--line)
+}
+body.light .action:hover,
+body.light .action.secondary:hover,
+body.light .bottom-action:hover,
+body.light .close:hover,
+body.light .theme-switch:hover,
+body.light .scan-button:hover{
+  background:var(--buttonHover);color:#fff
+}
+body:not(.light) .read-small,
+body:not(.light) .status,
+body:not(.light) .camera-status{color:#9aaab4}
+body:not(.light) .card-title{color:#9aaab4}
+body:not(.light) .meta{border-color:#202a31}
+body:not(.light) .rule{background:#202a31}
+body:not(.light) .kicker{color:#9aaab4}
+body:not(.light) .footer{color:#9aaab4}
+body:not(.light) .cross:before,
+body:not(.light) .cross:after{background:#344650}
+
+/* The payload is deliberately inverted against the active theme. */
+textarea{font-weight:650;caret-color:var(--payloadInk)}
+textarea::selection{background:var(--payloadInk);color:var(--payloadBg)}
+
+@media(max-width:700px){
+  body{padding:0}.shell{min-height:100svh;border:0;padding-top:calc(15px + env(safe-area-inset-top))}
+  .brand{font-size:26px;letter-spacing:-1px}
+  .topbar{flex-direction:column;align-items:stretch;gap:10px}
+  .top-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;margin-left:0}
+  .top-actions .scan-button,.top-actions .theme-switch{width:100%;min-width:0;justify-content:center;text-align:center;padding-left:6px;padding-right:6px}
+  .kicker{letter-spacing:1.4px}
+  .toolbar{align-items:stretch;flex-direction:column}
+  .switch{width:100%}.switch button{flex:1}
+  .preview-card{min-height:320px}
+  .workbench{grid-template-columns:1fr}
+  .workbench .editor{margin-bottom:14px}
+  .footer{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+}
+@media(hover:none){button:active{opacity:.72}}
+</style>
+</head>
+
+<body>
+<div class="shell">
+<i class="cross c1"></i><i class="cross c2"></i><i class="cross c3"></i><i class="cross c4"></i>
+
+<header>
+  <div class="topbar"><div class="brand">Barcode Studio</div><div class="top-actions"><button class="scan-button" id="cameraButton">SCAN CAMERA</button><button class="scan-button" id="settingsBtn">SETTINGS +</button><button class="theme-switch" id="themeSwitch" aria-label="Toggle dark mode"><span id="themeIcon">☀</span><span id="themeLabel">LIGHT</span></button></div></div>
+  <div class="kicker">Generate, Save, Read CODE 39 / ITF / CODE 128 / DATA MATRIX / QR codes</div>
+  <div class="rule"></div>
+</header>
+
+<main>
+  <section class="toolbar">
+    <div>
+      <div class="label">[ 01 — FORMAT ]</div>
+      <h2 id="title">Code 39 generator.</h2>
+    </div>
+    <div class="switch">
+      <button data-mode="39" class="active">CODE 39</button>
+      <button data-mode="itf">ITF</button>
+      <button data-mode="128">CODE 128</button>
+      <button data-mode="dm">DATA MATRIX</button>
+      <button data-mode="qr">QR</button>
+    </div>
+  </section>
+
+  <section class="camera-panel" id="cameraPanel">
+    <div class="field-label">[ CAMERA SCANNER ]</div>
+    <div class="camera-wrap">
+      <video id="cameraVideo" playsinline muted></video>
+      <div class="scan-line"></div>
+    </div>
+    <div class="camera-actions">
+      <button class="action" id="startCamera">START CAMERA</button>
+      <button class="action secondary" id="stopCamera">STOP</button>
+    </div>
+    <div class="camera-status" id="cameraStatus">
+      Point the camera at a Code 39, ITF, Code 128 or QR barcode.
+    </div>
+  </section>
+
+  <div class="workbench">
+    <section class="editor">
+      <div class="panel">
+        <label class="field-label" for="data">PAYLOAD / DATA</label>
+        <textarea id="data" spellcheck="false" autocapitalize="characters">1002</textarea>
+        <div class="actions">
+          <button class="action secondary" id="copyBtn">COPY</button>
+          <div class="save-menu" id="saveMenu">
+            <button class="action secondary" id="saveBtn" aria-haspopup="true" aria-expanded="false">SAVE ▾</button>
+            <div class="save-options" id="saveOptions" role="menu">
+              <button type="button" role="menuitem" data-format="svg">SVG</button>
+              <button type="button" role="menuitem" data-format="jpg">JPG</button>
+              <button type="button" role="menuitem" data-format="png">PNG</button>
+            </div>
+          </div>
+        </div>
+        <div id="status" class="status"></div>
+      </div>
+    </section>
+
+    <div class="output-col">
+      <section id="previewArea"></section>
+      <section class="size-bar" id="sizeBar">
+        <div class="size-bar-head"><span>[ OUTPUT SIZE ]</span><span class="size-value" id="codeSizeValue">100%</span></div>
+        <input type="range" class="size-range" id="codeSizeRange" min="25" max="100" step="5" value="100" aria-label="Output size">
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"></footer>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Barcode settings">
+    <div class="modal-head"><strong id="settingsTitle">CODE 39 SETTINGS</strong><button class="close" id="closeSettings">×</button></div>
+    <div id="settingsGrid"></div>
+  </div>
+</div>
+
+<script>
+const NS="http://www.w3.org/2000/svg";
+const $=id=>document.getElementById(id);
+let mode="39",lastSVG="",qrSize=1024,dmSize=8,codeSize=100,scanner=null,scannerRunning=false;
+let barColor="#092d4d",bgColor="#ffffff";
+const settings={c39Check:false,c39Text:true,itfText:true,c128Text:true};
+
+function esc(s){return String(s).replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));}
+function themeColors(){return document.body.classList.contains("light")?{bar:"#092d4d",bg:"#ffffff"}:{bar:"#cdcdcd",bg:"#05080b"};}
+function setStatus(msg,error=false){$("status").textContent=msg||"";$("status").className="status"+(error?" error":"");}
+function svgStart(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="${bgColor}"/>`;}
+function downloadText(text,name,type){const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),500);}
+
+/* CODE 39 */
+const C39={"0":"000110100","1":"100100001","2":"001100001","3":"101100000","4":"000110001","5":"100110000","6":"001110000","7":"000100101","8":"100100100","9":"001100100","A":"100001001","B":"001001001","C":"101001000","D":"000011001","E":"100011000","F":"001011000","G":"000001101","H":"100001100","I":"001001100","J":"000011100","K":"100000011","L":"001000011","M":"101000010","N":"000010011","O":"100010010","P":"001010010","Q":"000000111","R":"100000110","S":"001000110","T":"000010110","U":"110000001","V":"011000001","W":"111000000","X":"010010001","Y":"110010000","Z":"011010000","-":"010000101",".":"110000100"," ":"011000100","$":"010101000","/":"010100010","+":"010001010","%":"000101010","*":"010010100"};
+const C39V={"0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"A":10,"B":11,"C":12,"D":13,"E":14,"F":15,"G":16,"H":17,"I":18,"J":19,"K":20,"L":21,"M":22,"N":23,"O":24,"P":25,"Q":26,"R":27,"S":28,"T":29,"U":30,"V":31,"W":32,"X":33,"Y":34,"Z":35,"-":36,".":37," ":38,"$":39,"/":40,"+":41,"%":42};
+const C39FROM=Object.fromEntries(Object.entries(C39V).map(([k,v])=>[v,k]));
+
+function renderC39(){
+ let raw=$("data").value.toUpperCase();
+ for(const c of raw)if(!(c in C39)||c==="*")return fail("Invalid Code 39 character: "+c);
+ let data=raw;if(settings.c39Check)data+=C39FROM[[...raw].reduce((n,c)=>n+C39V[c],0)%43];
+ const n=3,w=6,q=30,h=150,text=settings.c39Text,full="*"+data+"*";let width=q*2;
+ for(let j=0;j<full.length;j++){for(const b of C39[full[j]])width+=b==="1"?w:n;if(j<full.length-1)width+=n}
+ const th=text?38:0;let out=svgStart(width,h+th),x=q;
+ for(let j=0;j<full.length;j++){for(let i=0;i<9;i++){const ww=C39[full[j]][i]==="1"?w:n;if(i%2===0)out+=`<rect x="${x}" y="0" width="${ww}" height="${h}" fill="${barColor}"/>`;x+=ww}if(j<full.length-1)x+=n}
+ if(text)out+=`<text x="${width/2}" y="${h+26}" text-anchor="middle" font-family="Courier New" font-size="19" fill="${barColor}">${esc(data)}</text>`;
+ out+="</svg>";showSVG(out,"CODE 39");
+}
+
+/* ITF */
+const ITF={"0":"nnwwn","1":"wnnnw","2":"nwnnw","3":"wwnnn","4":"nnwnw","5":"wnwnn","6":"nwwnn","7":"nnnww","8":"wnnwn","9":"nwnwn"};
+function renderITF(){
+ let raw=$("data").value.replace(/\s/g,"");
+ if(!/^\d+$/.test(raw))return fail("ITF accepts digits only.");
+ if(raw.length%2)return fail("ITF requires an even number of digits.");
+ const n=3,w=6,q=24,h=150;let elems=[["b",n],["s",n],["b",n],["s",n]];
+ for(let i=0;i<raw.length;i+=2){const a=ITF[raw[i]],b=ITF[raw[i+1]];for(let j=0;j<5;j++)elems.push(["b",a[j]==="w"?w:n],["s",b[j]==="w"?w:n])}
+ elems.push(["b",w],["s",n],["b",w],["s",n]);let width=q*2+elems.reduce((s,e)=>s+e[1],0),out=svgStart(width,h+(settings.itfText?38:0)),x=q;
+ for(const [t,z] of elems){if(t==="b")out+=`<rect x="${x}" y="0" width="${z}" height="${h}" fill="${barColor}"/>`;x+=z}
+ if(settings.itfText)out+=`<text x="${width/2}" y="${h+26}" text-anchor="middle" font-family="Courier New" font-size="19" fill="${barColor}">${raw}</text>`;
+ out+="</svg>";showSVG(out,"ITF");
+}
+
+/* CODE 128-B */
+const B128P=["212222","222122","222221","121223","121322","131222","122213","122312","132212","221213","221312","231212","112232","122132","122231","113222","123122","123221","223211","221132","221231","213212","223112","312131","311222","321122","321221","312212","322112","322211","212123","212321","232121","111323","131123","131321","112313","132113","132311","211313","231113","231311","112133","112331","132131","113123","113321","133121","313121","211331","231131","213113","213311","213131","311123","311321","331121","312113","312311","332111","314111","221411","431111","111224","111422","121124","121421","141122","141221","112214","112412","122114","122411","142112","142211","241211","221114","413111","241112","134111","111242","121142","121241","114212","124112","124211","411212","421112","421211","212141","214121","412121","111143","111341","131141","114113","114311","411113","411311","113141","114131","311141","411131","211412","211214","211232","2331112"];
+function render128(){
+ const raw=$("data").value;for(const c of raw)if(c.charCodeAt(0)<32||c.charCodeAt(0)>126)return fail("Code 128-B supports printable ASCII (32–126).");
+ const codes=[104,...[...raw].map(c=>c.charCodeAt(0)-32)];let sum=104;for(let i=1;i<codes.length;i++)sum+=codes[i]*i;codes.push(sum%103,106);
+ const n=3,q=24,h=150,text=settings.c128Text;let width=q*2;
+ for(const code of codes)for(const z of B128P[code])width+=parseInt(z)*n;
+ let out=svgStart(width,h+(text?38:0)),x=q;
+ for(const code of codes){let bar=true;for(const ch of B128P[code]){const z=parseInt(ch)*n;if(bar)out+=`<rect x="${x}" y="0" width="${z}" height="${h}" fill="${barColor}"/>`;x+=z;bar=!bar}}
+ if(text)out+=`<text x="${width/2}" y="${h+26}" text-anchor="middle" font-family="Courier New" font-size="19" fill="${barColor}">${esc(raw)}</text>`;
+ out+="</svg>";showSVG(out,"CODE 128");
+}
+
+/* DATA MATRIX: generated with bwip-js */
+function renderDM(){
+ const raw=$("data").value;
+ if(typeof bwipjs==="undefined")return fail("Data Matrix library did not load. Check the internet connection once.");
+ try{
+   const svg=bwipjs.toSVG({bcid:"datamatrix",text:raw||" ",scale:dmSize,padding:12,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
+   showSVG(svg,"DATA MATRIX");
+ }catch(e){fail("Unable to generate this Data Matrix. Try different text.");}
+}
+
+/* QR: generated locally by QRCode.js, no image URL/API */
+function renderQR(){
+ const text=$("data").value;
+ $("previewArea").innerHTML=`<article class="preview-card">
+  <div class="card-head"><span>QR</span><span>[ LIVE ]</span></div>
+  <div class="card-title">[ QR CODE PREVIEW ]</div>
+  <div class="preview"><div class="qr-box" id="qrBox" style="width:${codeSize}%"></div></div>
+  <div class="meta"><span>QR / LOCAL</span><span>${qrSize} PX</span></div>
+ </article>`;
+ const box=$("qrBox");
+ if(typeof QRCode==="undefined"){return fail("QR library did not load. Check the internet connection once to load QR support.")}
+ try{
+   new QRCode(box,{text:text||" ",width:qrSize,height:qrSize,colorDark:barColor,colorLight:bgColor,correctLevel:QRCode.CorrectLevel.M});
+ }catch(e){fail("Unable to generate this QR payload. Try shorter text.");}
+}
+function ensureViewBox(svg){
+ if(/\bviewBox=/i.test(svg))return svg;
+ const w=svg.match(/\bwidth="([\d.]+)/i),h=svg.match(/\bheight="([\d.]+)/i);
+ if(w&&h)return svg.replace(/<svg/i,`<svg viewBox="0 0 ${w[1]} ${h[1]}"`);
+ return svg;
+}
+function showSVG(svg,name){
+ svg=ensureViewBox(svg);
+ $("previewArea").innerHTML=`<article class="preview-card">
+  <div class="card-head"><span>${name}</span><span>[ LIVE ]</span></div>
+  <div class="card-title">[ BARCODE PREVIEW ]</div>
+  <div class="preview"><div class="barcode-box" id="barcodeBox" style="width:${codeSize}%">${svg}</div></div>
+  <div class="meta"><span>${name}</span><span>VECTOR</span></div>
+ </article>`;
+ lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
+}
+function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else renderQR();}
+
+/* settings */
+function settingsMarkup(){
+ const fontSetting = `
+   <div class="setting">
+     <span>FONT SIZE</span>
+     <select id="fontSizeSetting">
+       <option value="13">13 PX — COMPACT</option>
+       <option value="15" selected>15 PX — STANDARD</option>
+       <option value="17">17 PX — LARGE</option>
+       <option value="19">19 PX — EXTRA LARGE</option>
+     </select>
+   </div>`;
+
+ if(mode==="39")return fontSetting + `<div class="setting"><span>MOD-43 CHECKSUM</span><input id="s1" type="checkbox" ${settings.c39Check?"checked":""}></div><div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s2" type="checkbox" ${settings.c39Text?"checked":""}></div>`;
+ if(mode==="itf")return fontSetting + `<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.itfText?"checked":""}></div>`;
+ if(mode==="128")return fontSetting + `<div class="setting"><span>HUMAN-READABLE TEXT</span><input id="s1" type="checkbox" ${settings.c128Text?"checked":""}></div>`;
+ if(mode==="dm")return fontSetting + `<div class="setting"><span>FORMAT</span><span>ECC 200 / SQUARE</span></div>`;
+ return fontSetting + `<div class="setting"><span>GENERATION</span><span>LOCAL / IN PAGE</span></div>`;
+}
+function openSettings(){
+ $("settingsTitle").textContent=mode==="39"?"CODE 39 SETTINGS":mode==="itf"?"ITF SETTINGS":mode==="128"?"CODE 128 SETTINGS":mode==="dm"?"DATA MATRIX SETTINGS":"QR SETTINGS";
+ $("settingsGrid").innerHTML=settingsMarkup();
+
+ const fs=$("fontSizeSetting");
+ if(fs){
+   fs.value=localStorage.getItem("barcodeStudioFontSize") || "15";
+   fs.onchange=()=>{
+     document.documentElement.style.setProperty("--ui-scale",(fs.value/15).toFixed(4));
+     localStorage.setItem("barcodeStudioFontSize",fs.value);
+   };
+ }
+
+ const x=$("s1");if(x)x.onchange=()=>{if(mode==="39")settings.c39Check=x.checked;else if(mode==="itf")settings.itfText=x.checked;else if(mode==="128")settings.c128Text=x.checked;render()};
+ const y=$("s2");if(y)y.onchange=()=>{settings.c39Text=y.checked;render()};
+ $("modalBackdrop").classList.add("open");
+}
+
+/* camera */
+const ZX_FORMAT_NAMES={0:"aztec",1:"codabar",2:"code_39",3:"code_93",4:"code_128",5:"data_matrix",6:"ean_8",7:"ean_13",8:"itf",9:"maxicode",10:"pdf_417",11:"qr_code",12:"rss_14",13:"rss_expanded",14:"upc_a",15:"upc_e"};
+const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm"};
+const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR"};
+async function startCamera(){
+ if(scannerRunning)return;
+ $("cameraPanel").classList.add("open");
+ if(!window.isSecureContext){$("cameraStatus").textContent="Camera needs a secure page. Open this file over https:// or localhost on iOS/Android.";return}
+ if(!navigator.mediaDevices?.getUserMedia){$("cameraStatus").textContent="Camera access is not available in this browser.";return}
+ if(typeof ZXingBrowser==="undefined"){ $("cameraStatus").textContent="Scanner library could not load. Check the internet connection once.";return}
+ $("cameraStatus").textContent="Requesting camera permission…";
+ try{
+   const BF=ZXingBrowser.BarcodeFormat;
+   const hints=new Map();
+   hints.set(2,[BF.QR_CODE,BF.CODE_39,BF.CODE_128,BF.ITF,BF.DATA_MATRIX]); // DecodeHintType.POSSIBLE_FORMATS
+   hints.set(3,true); // DecodeHintType.TRY_HARDER
+   scanner=new ZXingBrowser.BrowserMultiFormatReader(hints);
+   scannerRunning=true;
+   await scanner.decodeFromConstraints(
+     {audio:false,video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}}},
+     $("cameraVideo"),
+     (result,error)=>{
+       if(result){
+         const value=result.getText();
+         $("data").value=value;
+         $("data").scrollTop=0;
+         let m;
+         try{m=ZX_TO_MODE[ZX_FORMAT_NAMES[result.getBarcodeFormat()]]}catch(e){}
+         if(m)setMode(m);else render();
+         $("cameraStatus").textContent="Scanned "+(m?modeLabels[m]:"code")+" — preview updated. Use COPY or SAVE.";
+         stopCamera();
+         $("data").focus();
+       } else if(scannerRunning){
+         $("cameraStatus").textContent="Scanning… QR / Code 39 / Code 128 / ITF / Data Matrix";
+       }
+     }
+   );
+ }catch(e){
+   scannerRunning=false;
+   $("cameraStatus").textContent="Camera could not start. On iPhone/iPad, open this page over HTTPS or localhost and allow camera access.";
+ }
+}
+function stopCamera(){
+ try{if(scanner)scanner.reset()}catch(e){}
+ const v=$("cameraVideo");if(v.srcObject){v.srcObject.getTracks().forEach(t=>t.stop());v.srcObject=null}
+ scannerRunning=false;
+}
+$("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){$("cameraPanel").classList.remove("open");stopCamera()}else{startCamera()}};
+$("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();$("cameraStatus").textContent="Camera stopped."};
+
+/* mode */
+const titles={39:"Code 39 generator.",itf:"ITF generator.",128:"Code 128 generator.",dm:"Data Matrix generator.",qr:"QR code generator."};
+function setMode(m){
+ mode=m;
+ document.querySelectorAll(".switch button").forEach(b=>b.classList.toggle("active",b.dataset.mode===m));
+ $("title").textContent=titles[m]||"";
+ $("modalBackdrop").classList.remove("open");
+ $("data").setAttribute("autocapitalize",m==="39"?"characters":"none");
+ document.querySelector('#saveOptions button[data-format="svg"]').disabled=m==="qr";
+ render();
+}
+document.querySelectorAll(".switch button").forEach(btn=>btn.onclick=()=>setMode(btn.dataset.mode));
+$("data").addEventListener("input",render);
+
+/* output size slider */
+const sizeRange=$("codeSizeRange");
+if(sizeRange){
+ const val=$("codeSizeValue");
+ const paint=()=>{const pct=(codeSize-25)/75*100;sizeRange.style.background=`linear-gradient(90deg,var(--blue2) ${pct}%,var(--line) ${pct}%)`};
+ sizeRange.oninput=()=>{codeSize=+sizeRange.value;val.textContent=codeSize+"%";paint();render()};
+ paint();
+}
+/* copy payload */
+$("copyBtn").onclick=async()=>{
+ const text=$("data").value;
+ try{await navigator.clipboard.writeText(text);setStatus("Copied to clipboard.");}
+ catch(e){const t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");setStatus("Copied to clipboard.");}catch(_){setStatus("Copy failed.",true);}t.remove();}
+};
+
+/* save menu */
+function payloadFileName(){
+ let name=($("data").value||"").trim().replace(/[\\/:*?"<>|\r\n\t]+/g,"_").replace(/\s+/g," ").replace(/^\.+/,"").trim();
+ if(!name)name="barcode";
+ if(name.length>80)name=name.slice(0,80).trim();
+ return name||"barcode";
+}
+function toggleSaveMenu(open){const menu=$("saveMenu");menu.classList.toggle("open",open);$("saveBtn").setAttribute("aria-expanded",menu.classList.contains("open")?"true":"false")}
+$("saveBtn").onclick=e=>{e.stopPropagation();toggleSaveMenu(!$("saveMenu").classList.contains("open"))};
+document.querySelectorAll("#saveOptions button").forEach(b=>b.onclick=()=>{toggleSaveMenu(false);saveAs(b.dataset.format)});
+document.addEventListener("click",e=>{if(!$("saveMenu").contains(e.target))toggleSaveMenu(false)});
+function targetSize(el){
+ const r=el.getBoundingClientRect();
+ const dpr=Math.min(window.devicePixelRatio||1,2);
+ return {w:Math.max(1,Math.round(r.width*dpr)),h:Math.max(1,Math.round(r.height*dpr))};
+}
+function exportElement(source,sizeEl,format){
+ const {w,h}=targetSize(sizeEl);
+ const out=document.createElement("canvas");out.width=w;out.height=h;
+ const ctx=out.getContext("2d");ctx.fillStyle=bgColor;ctx.fillRect(0,0,w,h);ctx.drawImage(source,0,0,w,h);
+ out.toBlob(blob=>{if(!blob)return;const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=payloadFileName()+"."+format;a.click();setTimeout(()=>URL.revokeObjectURL(u),500)},format==="jpg"?"image/jpeg":"image/png",format==="jpg"?0.92:undefined);
+}
+function sizedSVG(){
+ const svgEl=document.querySelector("#barcodeBox svg");
+ if(!svgEl)return lastSVG;
+ const clone=svgEl.cloneNode(true);
+ if(!clone.getAttribute("xmlns"))clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+ const r=svgEl.getBoundingClientRect();
+ clone.setAttribute("width",Math.round(r.width));
+ clone.setAttribute("height",Math.round(r.height));
+ return '<?xml version="1.0" encoding="UTF-8"?>\n'+clone.outerHTML;
+}
+function saveAs(format){
+ if(mode==="qr"){
+   if(format==="svg")return;
+   const canvas=document.querySelector("#qrBox canvas");
+   if(!canvas){setStatus("Nothing to export yet.",true);return}
+   exportElement(canvas,canvas,format);return;
+ }
+ if(!lastSVG){setStatus("Nothing to export yet.",true);return}
+ if(format==="svg"){downloadText(sizedSVG(),payloadFileName()+".svg","image/svg+xml;charset=utf-8");return}
+ const svgEl=document.querySelector("#barcodeBox svg");
+ const url=URL.createObjectURL(new Blob([lastSVG],{type:"image/svg+xml;charset=utf-8"}));
+ const img=new Image();
+ img.onload=()=>{URL.revokeObjectURL(url);exportElement(img,svgEl||img,format)};
+ img.onerror=()=>{URL.revokeObjectURL(url);setStatus("Could not render image.",true)};
+ img.src=url;
+}
+$("settingsBtn").onclick=openSettings;
+$("closeSettings").onclick=()=>$("modalBackdrop").classList.remove("open");
+$("modalBackdrop").onclick=e=>{if(e.target===$("modalBackdrop"))$("modalBackdrop").classList.remove("open")};
+window.addEventListener("pagehide",stopCamera);
+
+/* Theme: dark is the default. Remember the user's choice. */
+const savedTheme=localStorage.getItem("barcodeStudioTheme");
+if(savedTheme==="light")document.body.classList.add("light");
+function updateThemeButton(){const light=document.body.classList.contains("light");$("themeIcon").textContent=light?"☾":"☀";$("themeLabel").textContent=light?"DARK":"LIGHT";$("themeSwitch").setAttribute("aria-label",light?"Switch to dark mode":"Switch to light mode")}
+$("themeSwitch").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("barcodeStudioTheme",document.body.classList.contains("light")?"light":"dark");updateThemeButton();render()};
+updateThemeButton();
+const savedFontSize=localStorage.getItem("barcodeStudioFontSize")||"15";
+document.documentElement.style.setProperty("--ui-scale",(savedFontSize/15).toFixed(4));
+render();
+</script>
+</body>
+</html>
