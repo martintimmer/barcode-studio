@@ -2,9 +2,9 @@
 
 > Generate, save, and read **CODE 39 / ITF / CODE 128 / DATA MATRIX / QR** codes — right in your browser.
 
-A single-file, zero-install web app. Open the HTML, type a payload, and get a live, print-ready code. No server, no build step, no image uploads.
+A single-file, zero-install web app. Open `index.html`, type a payload, and get a live, print-ready code. No server, no build step, no image uploads.
 
-🧩 **File:** `barcode_studio_jetbrains_mono_fontsize.html`
+🧩 **File:** `index.html`
 🌐 **Runs:** any modern browser (desktop, iOS, iPadOS)
 🎨 **Theme:** dark by default, light available
 
@@ -15,6 +15,7 @@ A single-file, zero-install web app. Open the HTML, type a payload, and get a li
 - ⚡ **Live preview** — the code updates as you type
 - 🧾 **5 formats** — Code 39, ITF, Code 128, Data Matrix, QR
 - 💾 **One Save button** — export as **SVG**, **JPG**, or **PNG**
+- 📄 **Payload filenames** — downloads are named after your data (e.g. `1002.png`)
 - 📷 **Camera scanner** — point your device at a code and it fills the payload
 - 🌗 **Dark / light theme** — remembered between sessions
 - 🔒 **Private by design** — everything is generated locally in the page
@@ -23,7 +24,7 @@ A single-file, zero-install web app. Open the HTML, type a payload, and get a li
 
 ## 🚀 Quick Start
 
-1. **Open** `barcode_studio_jetbrains_mono_fontsize.html` in your browser *(double-click works)*.
+1. **Open** `index.html` in your browser *(double-click works)*.
 2. **Pick a format** from the tabs in the top-right of the toolbar.
 3. **Type your data** into the `PAYLOAD / DATA` box on the left.
 4. **Watch** the live code appear on the right.
@@ -51,7 +52,7 @@ The left panel is where you enter data. It regenerates on every keystroke — th
 If the input is invalid for the selected format, a red hint appears under the box.
 
 ### 🖼️ Preview panel
-The right panel shows the live result, its format, and `[ LIVE ]` status. Codes are rendered dark-on-white (and dark-theme friendly on screen).
+The right panel shows the live result, its format, and `[ LIVE ]` status. Codes are shown dark-on-white in light mode and light-on-dark in dark mode, and the downloaded image matches exactly what you see.
 
 ### 💾 Saving your code
 Click **`SAVE ▾`** and pick a format:
@@ -59,10 +60,10 @@ Click **`SAVE ▾`** and pick a format:
 | Option | Best for | Notes |
 | --- | --- | --- |
 | 🖋️ **SVG** | Print & design tools | Infinite scaling, tiny file *(not available for QR)* |
-| 🖼️ **JPG** | Sharing / documents | White background, photo-friendly |
+| 🖼️ **JPG** | Sharing / documents | Photo-friendly |
 | 📄 **PNG** | Sharp pixels | Lossless, clean edges |
 
-File names follow the format, e.g. `code39.svg`, `qrcode.png`, `datamatrix.jpg`.
+Files are named after your **payload**, e.g. `1002.svg`, `1002.png`, `1002.jpg`. Characters that aren't allowed in filenames are replaced with `_`.
 
 ### 📋 Copying the payload
 Click **`COPY`** to put the current payload on your clipboard — handy after scanning.
@@ -74,7 +75,7 @@ Drag it to scale the rendered code. Scaling is always proportional, so **no code
 ### ⚙️ Settings
 Open with the **`SETTINGS +`** button in the top bar. Options adapt to the current format:
 
-- 🔠 **Font size** — UI scale (12–18 px, scales the whole workspace)
+- 🔠 **Font size** — UI scale (13–19 px, default **15 px / Standard**, scales the whole workspace)
 - ✅ **MOD-43 checksum** — Code 39 only
 - 👁️ **Human-readable text** — show the value under 1D barcodes
 
@@ -87,7 +88,9 @@ Open with the **`SETTINGS +`** button in the top bar. Options adapt to the curre
 4. The app detects the symbology, switches to that format, and loads the live preview.
 5. Use **`COPY`** to copy the payload, or **`SAVE ▾`** to save a copy in the same mode it was scanned.
 
-> 🔐 On **iPhone / iPad**, camera access requires the page to be served over **HTTPS** or **localhost**.
+The scanner is configured for all five supported types (QR, Code 39, Code 128, ITF, Data Matrix) with a "try harder" pass for accuracy.
+
+> 🔐 On **iPhone / iPad**, camera access requires the page to be served over **HTTPS** or **localhost**. Opening the file directly off local storage will not grant camera access.
 
 ### 🌗 Theme
 Toggle **dark ⇄ light** with the button in the top-right corner. It shows the mode you'll switch *to* and remembers your choice.
@@ -99,7 +102,7 @@ Toggle **dark ⇄ light** with the button in the top-right corner. It shows the 
 | Library | Role |
 | --- | --- |
 | [QRCode.js](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js) | QR generation |
-| [ZXing Browser](https://unpkg.com/@zxing/browser@0.1.5/) | Camera decoding |
+| [ZXing Browser](https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js) | Camera decoding |
 | [bwip-js](https://unpkg.com/bwip-js@4.6.0/) | Data Matrix generation |
 | [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) | UI typeface |
 
@@ -112,7 +115,7 @@ Code 39, ITF, and Code 128 are generated by built-in, dependency-free routines.
 | Symptom | Fix |
 | --- | --- |
 | "library did not load" | Connect to the internet once and reload |
-| Camera won't start | Use HTTPS/localhost and allow camera permission |
+| Camera won't start | Serve over HTTPS/localhost and allow camera permission |
 | `Invalid Code 39 character` | Stick to `0-9 A-Z - . space $ / + %` |
 | Data Matrix fails | Usually means the library didn't load — check connection |
 | QR export has no SVG | QR is raster-only (`JPG` / `PNG`) |
@@ -122,3 +125,11 @@ Code 39, ITF, and Code 128 are generated by built-in, dependency-free routines.
 ## 🔒 Privacy
 
 Your data never leaves the device. Codes are generated and scanned entirely in the browser — nothing is uploaded to a server.
+
+---
+
+## 📦 Publishing / Hosting
+
+Because this is a single static file, you can host it anywhere. To enable the camera on mobile, serve it over HTTPS — **GitHub Pages** is the easiest option (see the release instructions in the repo notes).
+
+If you publish a release, attach `index.html` (or a zip of this folder) as a downloadable asset.
