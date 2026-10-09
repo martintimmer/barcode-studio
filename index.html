@@ -452,6 +452,9 @@ body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
         <button data-mode="qr">QR</button>
         <button data-mode="dm">DATA MATRIX</button>
         <button data-mode="microqr">MICRO QR</button>
+        <button data-mode="pdf417" class="tab-extra">PDF417</button>
+        <button data-mode="aztec" class="tab-extra">AZTEC</button>
+        <button data-mode="aztecc" class="tab-extra">AZTEC COMPACT</button>
         <button data-mode="39" class="active">CODE 39</button>
         <button data-mode="itf">ITF</button>
         <button data-mode="128" class="tab-extra">CODE 128</button>
@@ -461,6 +464,9 @@ body.edge-off,body.edge-off:not(.light){background:var(--paper)!important}
       <div class="mode-more" id="modeMore">
         <button type="button" class="more-btn" id="moreBtn" aria-haspopup="true" aria-expanded="false">MORE ▾</button>
         <div class="more-options" id="moreOptions" role="menu">
+          <button type="button" data-mode="pdf417">PDF417</button>
+          <button type="button" data-mode="aztec">AZTEC</button>
+          <button type="button" data-mode="aztecc">AZTEC COMPACT</button>
           <button type="button" data-mode="128">CODE 128</button>
           <button type="button" data-mode="ean13">EAN-13</button>
           <button type="button" data-mode="upca">UPC-A</button>
@@ -635,7 +641,7 @@ function applyLookSettings(){
 
 function esc(s){return String(s).replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));}
 function themeColors(){return document.body.classList.contains("light")?{bar:"#092d4d",bg:"#ffffff"}:{bar:"#cdcdcd",bg:"#05080b"};}
-const DEFAULT_PAYLOAD={39:"1002",itf:"1002",128:"1002",dm:"1002",qr:"1002",microqr:"1052757",ean13:"590123412345",upca:"03600029145"};
+const DEFAULT_PAYLOAD={39:"1002",itf:"1002",128:"1002",dm:"1002",qr:"1002",microqr:"1052757",pdf417:"1002",aztec:"1002",aztecc:"1002",ean13:"590123412345",upca:"03600029145"};
 function inputValue(){return ($("data").value||"").trim()||DEFAULT_PAYLOAD[mode]||"1002";}
 const INPUT_HINTS={
  itf:"NOTE: ITF accepts digits 0-9 only, and the total count must be EVEN. Examples: 1234 or 123456.",
@@ -721,6 +727,36 @@ function renderMicroQR(){
  }catch(e){fail("Unable to generate this Micro QR. Version M4 holds up to 35 digits — try shorter numeric text.");}
 }
 
+/* PDF417: generated with bwip-js */
+function renderPDF417(){
+ const raw=inputValue();
+ if(typeof bwipjs==="undefined")return fail("PDF417 library did not load. Check the internet connection once.");
+ try{
+   const svg=bwipjs.toSVG({bcid:"pdf417",text:raw||" ",scale:3,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
+   showSVG(svg,"PDF417");
+ }catch(e){fail("Unable to generate this PDF417. Try different text.");}
+}
+
+/* AZTEC CODE: generated with bwip-js */
+function renderAztec(){
+ const raw=inputValue();
+ if(typeof bwipjs==="undefined")return fail("Aztec library did not load. Check the internet connection once.");
+ try{
+   const svg=bwipjs.toSVG({bcid:"azteccode",text:raw||" ",scale:6,eclevel:23,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
+   showSVG(svg,"AZTEC");
+ }catch(e){fail("Unable to generate this Aztec Code. Try different text.");}
+}
+
+/* COMPACT AZTEC CODE: 2 layers (19x19 modules) via bwip-js */
+function renderAztecCompact(){
+ const raw=inputValue();
+ if(typeof bwipjs==="undefined")return fail("Aztec library did not load. Check the internet connection once.");
+ try{
+   const svg=bwipjs.toSVG({bcid:"azteccodecompact",text:raw||" ",layers:2,scale:8,barcolor:barColor.slice(1),backgroundcolor:bgColor.slice(1)});
+   showSVG(svg,"COMPACT AZTEC");
+ }catch(e){fail("Unable to generate this Compact Aztec. 2 layers (19x19) holds limited data — try shorter text.");}
+}
+
 
 /* EAN-13 / UPC-A (retail 1D) via bwip-js */
 function renderBwip1D(bcid,label){
@@ -769,7 +805,7 @@ function showSVG(svg,name){
  lastSVG='<?xml version="1.0" encoding="UTF-8"?>\n'+svg;
 }
 function fail(msg){setStatus(msg,true);$("previewArea").innerHTML="";return false}
-function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";updateSaveLinks();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="microqr")renderMicroQR();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
+function render(){const c=themeColors();barColor=c.bar;bgColor=c.bg;updateHint();updateTextSliderVisibility();const bb=$("batchBtn");if(bb)bb.style.display=(mode==="qr")?"":"none";updateSaveLinks();setStatus("");if(mode==="39")renderC39();else if(mode==="itf")renderITF();else if(mode==="128")render128();else if(mode==="dm")renderDM();else if(mode==="microqr")renderMicroQR();else if(mode==="pdf417")renderPDF417();else if(mode==="aztec")renderAztec();else if(mode==="aztecc")renderAztecCompact();else if(mode==="ean13")renderEAN13();else if(mode==="upca")renderUPCA();else renderQR();}
 
 /* settings */
 function settingsMarkup(){
@@ -823,8 +859,8 @@ function openSettings(){
 
 /* camera */
 const ZX_FORMAT_NAMES={0:"aztec",1:"codabar",2:"code_39",3:"code_93",4:"code_128",5:"data_matrix",6:"ean_8",7:"ean_13",8:"itf",9:"maxicode",10:"pdf_417",11:"qr_code",12:"rss_14",13:"rss_expanded",14:"upc_a",15:"upc_e",17:"micro_qr_code"};
-const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm",ean_13:"ean13",upca:"upca",micro_qr_code:"microqr"};
-const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR",microqr:"MICRO QR",ean13:"EAN-13",upca:"UPC-A"};
+const ZX_TO_MODE={qr_code:"qr",code_39:"39",code_128:"128",itf:"itf",data_matrix:"dm",ean_13:"ean13",upca:"upca",micro_qr_code:"microqr",pdf_417:"pdf417",aztec:"aztec"};
+const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR",microqr:"MICRO QR",pdf417:"PDF417",aztec:"AZTEC",aztecc:"AZTEC COMPACT",ean13:"EAN-13",upca:"UPC-A"};
 function openCameraPanel(){$("cameraPanel").classList.add("open");document.body.classList.add("scanning")}
 function closeCameraPanel(){$("cameraPanel").classList.remove("open");document.body.classList.remove("scanning")}
 let scanLocked=false,scanControls=null,scanStarting=false;
@@ -896,8 +932,8 @@ $("cameraButton").onclick=()=>{if($("cameraPanel").classList.contains("open")){c
 $("startCamera").onclick=startCamera;$("stopCamera").onclick=()=>{stopCamera();closeCameraPanel();$("cameraStatus").textContent="Camera stopped.";};
 
 /* mode */
-const titles={39:"Code 39 generator",itf:"ITF generator",128:"Code 128 generator",dm:"Data Matrix generator",qr:"QR code generator",microqr:"Micro QR generator",ean13:"EAN-13 generator",upca:"UPC-A generator"};
-const MODE_HASH={39:"Code39",itf:"ITF",128:"Code128",dm:"DataMatrix",ean13:"EAN13",upca:"UPCA",qr:"QR",microqr:"MicroQR"};
+const titles={39:"Code 39 generator",itf:"ITF generator",128:"Code 128 generator",dm:"Data Matrix generator",qr:"QR code generator",microqr:"Micro QR generator",pdf417:"PDF417 generator",aztec:"Aztec Code generator",aztecc:"Compact Aztec generator",ean13:"EAN-13 generator",upca:"UPC-A generator"};
+const MODE_HASH={39:"Code39",itf:"ITF",128:"Code128",dm:"DataMatrix",ean13:"EAN13",upca:"UPCA",qr:"QR",microqr:"MicroQR",pdf417:"PDF417",aztec:"Aztec",aztecc:"AztecCompact"};
 const HASH_MODE={};for(const k in MODE_HASH)HASH_MODE[MODE_HASH[k].toLowerCase()]=k;
 function parseHash(){
  const raw=(location.hash||"").replace(/^#/,"");
@@ -961,7 +997,7 @@ function setMode(m,fromHash){
 }
 function updateMoreLabel(){
  const b=$("moreBtn");if(!b)return;
- const extra={128:"CODE 128",ean13:"EAN-13",upca:"UPC-A"};
+ const extra={pdf417:"PDF417",aztec:"AZTEC",aztecc:"AZTEC COMPACT",128:"CODE 128",ean13:"EAN-13",upca:"UPC-A"};
  b.textContent=(extra[mode]||"MORE")+" ▾";
 }
 function toggleMoreMenu(open){const m=$("modeMore");if(!m)return;m.classList.toggle("open",open);const b=$("moreBtn");if(b)b.setAttribute("aria-expanded",m.classList.contains("open")?"true":"false")}
