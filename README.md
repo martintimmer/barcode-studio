@@ -161,7 +161,7 @@ Open with the **`SETTINGS +`** button in the top bar. Options adapt to the curre
 4. The camera closes automatically, the app switches to the detected format, and loads the live preview.
 5. Use **`COPY`** to copy the payload, or **`SAVE ▾`** to save a copy in the same mode it was scanned.
 
-The reader is configured for **every symbology ZXing supports** (QR, **Micro QR**, Data Matrix, Aztec, PDF417, MaxiCode, Code 39/93/128, Codabar, ITF, EAN-13/8, UPC-A/E, RSS) with a "try harder" pass for accuracy. Formats the app can also generate (Code 39, ITF, Code 128, Data Matrix, Micro QR, PDF417, Aztec, EAN-13, UPC-A, QR) switch the mode automatically; anything else is loaded read-only so you can still **COPY** it.
+The reader is configured for **every symbology ZXing supports** (QR, **Micro QR**, Data Matrix, Aztec, PDF417, MaxiCode, Code 39/93/128, Codabar, ITF, EAN-13/8, UPC-A/E, RSS) with a "try harder" pass for accuracy. Because the bundled ZXing-js decoder can miss **high-version QR codes (large payloads)**, every frame is also run through **jsQR** as a QR fallback. Formats the app can also generate (Code 39, ITF, Code 128, Data Matrix, Micro QR, PDF417, Aztec, EAN-13, UPC-A, QR) switch the mode automatically; anything else is loaded read-only so you can still **COPY** it.
 
 > 🔐 On **iPhone / iPad**, camera access requires the page to be served over **HTTPS** or **localhost**. Opening the file directly off local storage will not grant camera access — use the [live app](https://martintimmer.github.io/barcode-studio/).
 
@@ -179,6 +179,7 @@ Wide screens keep a **540px** minimum layout; phones/small screens (≤700px) re
 | --- | --- |
 | [QRCode.js](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js) | QR generation |
 | [ZXing Browser](https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js) | Camera decoding (incl. Micro QR) |
+| [jsQR](https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js) | Camera decoding of large/high-version QR codes |
 | [bwip-js](https://unpkg.com/bwip-js@4.6.0/) | Data Matrix, Micro QR, PDF417, Aztec + EAN-13/UPC-A generation |
 | [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) | UI typeface |
 

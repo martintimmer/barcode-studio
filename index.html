@@ -24,6 +24,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js" integrity="sha384-HRtzk9lZgkbSgvUyQrnfC/GxiXZgwaNyD7hC9wcXlsBpDhkS80ISl73juef2FRuf" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/bwip-js@4.6.0/dist/bwip-js-min.js" integrity="sha384-J60nbjylm/nNUfF87H10iB7m7Bztzn2lrNShNEYFBypXzcNZ6a6aXIuV+rUz7r/i" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" crossorigin="anonymous"></script>
 
 <style>
  :root{
@@ -865,6 +866,35 @@ const modeLabels={39:"CODE 39",itf:"ITF",128:"CODE 128",dm:"DATA MATRIX",qr:"QR"
 function openCameraPanel(){$("cameraPanel").classList.add("open");document.body.classList.add("scanning")}
 function closeCameraPanel(){$("cameraPanel").classList.remove("open");document.body.classList.remove("scanning")}
 let scanLocked=false,scanControls=null,scanStarting=false;
+let jsqrCanvas=null,jsqrCtx=null;
+/* ZXing-js can miss high-version QR codes (large payloads); jsQR handles them. */
+function tryJsQR(){
+ if(typeof jsQR!=="function")return null;
+ try{
+   const v=$("cameraVideo"),w=v.videoWidth,h=v.videoHeight;
+   if(!w||!h)return null;
+   if(!jsqrCanvas||jsqrCanvas.width!==w||jsqrCanvas.height!==h){jsqrCanvas=document.createElement("canvas");jsqrCanvas.width=w;jsqrCanvas.height=h;jsqrCtx=jsqrCanvas.getContext("2d")}
+   jsqrCtx.drawImage(v,0,0,w,h);
+   const im=jsqrCtx.getImageData(0,0,w,h);
+   const r=jsQR(im.data,w,h,{inversionAttempts:"dontInvert"});
+   return (r&&r.data)?r.data:null;
+ }catch(e){return null}
+}
+function handleScanResult(value,fmt){
+ if(scanLocked)return;
+ scanLocked=true;
+ try{$("data").value=value;$("data").scrollTop=0}catch(e){}
+ let m;try{m=ZX_TO_MODE[fmt]}catch(e){}
+ try{
+   if(codeSize===50){codeSize=75;paintSizeSlider()}
+   if(m)setMode(m);else{render();syncURL(false)}
+ }catch(e){}
+ stopCamera();
+ closeCameraPanel();
+ const label=m?modeLabels[m]:(fmt?fmt.replace(/_/g," ").toUpperCase():"code");
+ $("cameraStatus").textContent="Scanned "+label+(m?"":" (read-only)")+" — payload loaded.";
+ setStatus("Scanned "+label+(m?" (read-only — use COPY)":"")+" — payload loaded.");
+}
 async function startCamera(){
  if(scannerRunning||scanStarting)return;
  openCameraPanel();
@@ -889,27 +919,14 @@ async function startCamera(){
    scanner=new ZXingBrowser.BrowserMultiFormatReader(hints);
    scannerRunning=true;
    scanControls=await scanner.decodeFromConstraints(
-     {audio:false,video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}}},
+     {audio:false,video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}}},
      $("cameraVideo"),
      (result,error)=>{
-       if(result){
-         if(scanLocked)return;
-         scanLocked=true;
-         const value=result.getText();
-         $("data").value=value;
-         $("data").scrollTop=0;
-         let fmt,m;
-         try{fmt=ZX_FORMAT_NAMES[result.getBarcodeFormat()];m=ZX_TO_MODE[fmt]}catch(e){}
-         if(codeSize===50){codeSize=75;paintSizeSlider()}
-         if(m)setMode(m);else{render();syncURL(false)}
-         stopCamera();
-         closeCameraPanel();
-         const label=m?modeLabels[m]:(fmt?fmt.replace(/_/g," ").toUpperCase():"code");
-         $("cameraStatus").textContent="Scanned "+label+(m?"":" (read-only)")+" — payload loaded.";
-         setStatus("Scanned "+label+(m?"":" (read-only — use COPY)")+" — payload loaded.");
-       } else if(scannerRunning&&!scanLocked){
-         $("cameraStatus").textContent="Scanning… try to fill the frame with the barcode";
-       }
+       if(result){handleScanResult(result.getText(),ZX_FORMAT_NAMES[result.getBarcodeFormat()]);return}
+       if(scanLocked)return;
+       const qr=tryJsQR();
+       if(qr!=null){handleScanResult(qr,"qr_code");return}
+       if(scannerRunning)$("cameraStatus").textContent="Scanning… try to fill the frame with the barcode";
      }
    );
  }catch(e){
